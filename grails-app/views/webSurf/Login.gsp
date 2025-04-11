@@ -201,45 +201,46 @@
                 </div>
                 <br>
 
-                <form>
+                <form id="registerForm" method="POST" enctype="multipart/form-data" action="/LS_UserRegister/register">
                     <div class="form-group ">
                         <label for="exampleFirstName">First Name</label>
-                        <input type="text" class="form-control" id="exampleFirstName" placeholder="First Name">
+                        <input type="text" name="firstName" class="form-control" id="exampleFirstName" placeholder="First Name">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleLastName">Last Name</label>
-                        <input type="text" class="form-control" id="exampleLastName" placeholder="Last Name">
+                        <input type="text" name="lastName" class="form-control" id="exampleLastName" placeholder="Last Name">
                     </div>
 
                     <div class="form-group ">
                         <label for="exampleInputEmail2">Email address</label>
-                        <input type="Email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp2"
-                               placeholder="Enter email">
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
                         <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleUsername">Username</label>
-                        <input type="text" class="form-control" id="exampleUsername" placeholder="Username">
+                        <input type="text" name="username" class="form-control" id="exampleUsername" placeholder="Username">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputPassword2">Password*</label>
-                        <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputPassword2">Confirm Password*</label>
-                        <input type="password" class="form-control" id="exampleInputPassword3" placeholder="Password">
+                        <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3" placeholder="Confirm Password">
                     </div>
 
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Photo</label>
-                        <input class="form-control" type="file" id="formFile">
+                        <input class="form-control" type="file" name="photo" id="formFile">
                     </div>
+
                     <br>
+
                     <button type="submit" class="btn btn-primary">Register</button>
                 </form>
             </div>

@@ -69,6 +69,7 @@ dependencies {
     testImplementation("com.h2database:h2:2.3.232")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.grails.plugins:grails-console:2.1.1")
+    runtimeOnly("com.oracle.database.jdbc:ojdbc8:19.8.0.0")
 }
 
 application {

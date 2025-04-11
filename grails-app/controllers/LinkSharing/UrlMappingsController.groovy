@@ -12,5 +12,7 @@ class UrlMappings {
         "500"(view:'/error')
         "404"(view:'/notFound')
 
+//        "/LS_UserRegister/register"(controller: "LS_UserRegister", action: "register")
+
     }
 }

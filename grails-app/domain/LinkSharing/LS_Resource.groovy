@@ -1,6 +1,6 @@
 package LinkSharing
 
-class Resource {
+class LS_Resource {
     String description;
     LS_User createdBy;
     Topic topic;
@@ -12,4 +12,5 @@ class Resource {
     static constraints = {
         description nullable: false, blank:false;
     }
+
 }

@@ -7,15 +7,19 @@ class LS_User {
     String password;
     String firstName;
     String lastName;
-    Blob photo;
+    byte[] photo;
     Boolean admin=false;
     Boolean active=true;
     Boolean isDeleted=false;
     Date dateCreated;
     Date lastUpdated;
-    static hasMany=[topic:Topic, subscription:Subscription, readingItem:ReadingItem, rating:ResourceRating, resource:Resource]
+    static hasMany=[topic:Topic, subscription:Subscription, readingItem:ReadingItem, rating:ResourceRating, resource:LS_Resource]
     static constraints = {
-        email email: true, unique: true, nullable: false;
+//        email email: true, unique: true, nullable: false;
+//        email blank: false
+        email blank: false, validator: { val, obj ->
+            return val ==~ /.+@.+\..+/
+        }
         username unique: true, nullable: false;
         password nullable: false , blank:false;
         firstName nullable: false;

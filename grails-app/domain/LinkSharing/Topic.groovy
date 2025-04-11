@@ -9,7 +9,7 @@ class Topic {
     enum Visibility{
         PUBLIC, PRIVATE
     }
-    static hasMany=[subscription:Subscription,resource:Resource]
+    static hasMany=[subscription:Subscription,resource:LS_Resource]
     static belongsTo = [createdBy: LS_User]
     static constraints = {
         name blank: false, unique: 'createdBy'
