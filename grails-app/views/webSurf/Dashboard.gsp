@@ -36,7 +36,7 @@
 </style>
 
 <body>
-<Header:navbar username="Alok"/>
+<Header:navbar username="${session.user?.username}"/>
 
 <div class="container">
     <div class="row align-items-start mt-5">
@@ -48,19 +48,18 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <img src="${assetPath(src: 'defaultImg.png')}" alt="Placeholder Image" width="100%" height="auto">
+                        <img src="data:image/jpeg;base64,${session.user?.photo ? session.user?.photo.encodeBase64() : ''}" alt="User Photo" width="100%" height="auto">
                     </div>
 
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                <h5>Uday Pratap Singh
-                                </h5>
+                                <h5>${session.user?.firstName} ${session.user?.lastName}</h5>
                             </div>
                         </div>
 
                         <div class="row">
-                            <h6>@user_name</h6>
+                            <h6>@${session.user?.username}</h6>
                         </div>
 
                         <div class="row">

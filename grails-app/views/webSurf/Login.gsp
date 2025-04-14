@@ -38,9 +38,16 @@
 </style>
 
 <body>
-<Header:navbar username="Alok"/>
+<Header:navbar username="${session.user?.username}"/>
 
 <div class="container">
+    <div>
+        <g:if test="${flash.message}">
+            <div class="alert alert-warning" role="alert">
+                ${flash.message}
+            </div>
+        </g:if>
+    </div>
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
@@ -166,17 +173,21 @@
                     <h3>Login</h3>
                 </div>
                 <br>
-
-                <form>
+                <form id="loginForm" method="POST" enctype="multipart/form-data" action="/LS_UserRegister/login">
                     <div class="form-group ">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp1"
-                               placeholder="Enter email">
+                        <label for="exampleInputEmail1">
+                            Email address<span style="color: red;">*</span>
+                        </label>
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp1"
+                               placeholder="Enter email" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password*</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <label for="exampleInputPassword1">
+                            Password<span style="color: red;">*</span>
+                        </label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1"
+                               placeholder="Password" required>
                     </div>
                     <br>
 
@@ -196,15 +207,17 @@
             <br>
 
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
-                <div class="row">
-                    <h3>Register*</h3>
+                <div class="row centered">
+                    <h3>Register</h3>
                 </div>
-                <br>
 
                 <form id="registerForm" method="POST" enctype="multipart/form-data" action="/LS_UserRegister/register">
+%{--                <form id="registerForm" method="POST" enctype="multipart/form-data" action="/TempService/register">--}%
                     <div class="form-group ">
-                        <label for="exampleFirstName">First Name</label>
-                        <input type="text" name="firstName" class="form-control" id="exampleFirstName" placeholder="First Name">
+                        <label for="exampleFirstName">
+                            First Name<span style="color: red;">*</span>
+                        </label>
+                        <input type="text" name="firstName" class="form-control" id="exampleFirstName" placeholder="First Name" required>
                     </div>
 
                     <div class="form-group">
@@ -213,30 +226,40 @@
                     </div>
 
                     <div class="form-group ">
-                        <label for="exampleInputEmail2">Email address</label>
-                        <input type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email">
+                        <label for="exampleInputEmail2">
+                            Email address<span style="color: red;">*</span>
+                        </label>
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email" required>
                         <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleUsername">Username</label>
-                        <input type="text" name="username" class="form-control" id="exampleUsername" placeholder="Username">
+                        <label for="exampleUsername">
+                            Username<span style="color: red;">*</span>
+                        </label>
+                        <input type="text" name="username" class="form-control" id="exampleUsername" placeholder="Username"required>
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleInputPassword2">Password*</label>
-                        <input type="password" name="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                        <label for="exampleInputPassword2">
+                            Password<span style="color: red;">*</span>
+                        </label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="exampleInputPassword2">Confirm Password*</label>
-                        <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3" placeholder="Confirm Password">
+                        <label for="exampleInputPassword2">
+                            Confirm Password<span style="color: red;">*</span>
+                        </label>
+                        <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3" placeholder="Confirm Password" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="formFile" class="form-label">Photo</label>
-                        <input class="form-control" type="file" name="photo" id="formFile">
+                        <label for="formFile" class="form-label">
+                            Photo<span style="color: red;">*</span>
+                        </label>
+                        <input class="form-control" type="file" name="photo" id="formFile" required>
                     </div>
 
                     <br>

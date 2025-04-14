@@ -83,7 +83,7 @@ class HeaderTagLib {
                             <a class="dropdown-item" href="/webSurf/EditProfile">Edit Profile</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="/webSurf/Login">Logout</a>
+                            <a class="dropdown-item" href="/LS_UserRegister/logout">Logout</a>
                         </li>
                     </ul>
                 </div>

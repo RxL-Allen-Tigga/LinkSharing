@@ -38,7 +38,7 @@ body {
 </style>
 
 <body>
-<Header:navbar username="Alok"/>
+<Header:navbar username="${session.user?.username}"/>
 <div class="container">
 
     <div class="row align-items-start text-bg-light p-2 rounded-2 border border-dark p-2 mb-2">

@@ -11,8 +11,9 @@ dataSource:
   password: 'linksharing123'
   pooled: true
   jmxExport: true
-  dbCreate: create-drop
-  
+  dbCreate: update
+#  dbCreate: create-drop
+
 #dataSource:
 #  url: jdbc:oracle:thin@localhost:1521/orclpdb1
 #  driverClassName: oracle.jdbc.OracleDriver
