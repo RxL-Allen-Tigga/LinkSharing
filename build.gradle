@@ -39,6 +39,7 @@ dependencies {
     implementation("org.grails:grails-web-boot")
     implementation("org.grails.plugins:gsp")
     implementation("org.grails.plugins:hibernate5")
+    implementation("org.grails:grails-dependencies")
     implementation("org.grails.plugins:scaffolding")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-starter")
@@ -66,10 +67,14 @@ dependencies {
     testImplementation("io.micronaut:micronaut-http-client")
 
 //    Added
-    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("com.h2data  base:h2:2.3.232")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.grails.plugins:grails-console:2.1.1")
     runtimeOnly("com.oracle.database.jdbc:ojdbc8:19.8.0.0")
+    implementation("org.hibernate:hibernate-core:5.4.22.Final")
+    runtimeOnly("com.h2database:h2")
+
+    implementation group: 'org.codehaus.groovy', name: 'groovy-dateutil', version: '3.0.13'
 }
 
 application {

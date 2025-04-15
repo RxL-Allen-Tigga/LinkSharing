@@ -40,6 +40,13 @@ body {
 <body>
 <Header:navbar username="${session.user?.username}"/>
 <div class="container">
+    <div>
+        <g:if test="${flash.message}">
+            <div class="alert alert-warning" role="alert">
+                ${flash.message}
+            </div>
+        </g:if>
+    </div>
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
@@ -199,23 +206,30 @@ body {
                     <h3>Edit Profile</h3>
                 </div>
                 <br>
-                <form>
-                    <div class="form-group ">
-                        <label for="exampleFirstName">First Name</label>
-                        <input type="text" class="form-control" id="exampleFirstName" placeholder="First Name">
-                    </div>
+                <form action="/LS_UserRegister/updateProfile" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="exampleLastName">Last Name</label>
-                        <input type="text" class="form-control" id="exampleLastName" placeholder="Last Name">
+                        <label for="firstName">First Name</label>
+                        <input type="text" name="firstName" id="firstName" class="form-control"
+                               value="${userInstance?.firstName}">
                     </div>
+
                     <div class="form-group">
-                        <label for="exampleUsername">Username</label>
-                        <input type="text" class="form-control" id="exampleUsername" placeholder="Username">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" name="lastName" id="lastName" class="form-control"
+                               value="${userInstance?.lastName}">
                     </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" class="form-control"
+                               value="${userInstance?.username}">
+                    </div>
+
                     <div class="mb-3">
-                        <label for="formFile" class="form-label">Photo</label>
-                        <input class="form-control" type="file" id="formFile">
+                        <label for="photo">Photo</label>
+                        <input type="file" name="photo" id="photo" class="form-control">
                     </div>
+
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
@@ -225,14 +239,14 @@ body {
                     <h3>Change Password</h3>
                 </div>
                 <br>
-                <form>
+                <form action="/LS_UserRegister/changePassword" method="POST">
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password*</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        <label for="newPassword">New Password*</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Confirm Password*</label>
-                        <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                        <label for="confirmPassword">Confirm Password*</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary">Update</button>

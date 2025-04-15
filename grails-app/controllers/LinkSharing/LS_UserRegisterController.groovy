@@ -18,7 +18,7 @@ class LS_UserRegisterController {
             redirect(controller: "webSurf", action: "Login")
             return
         }
-        if (LS_User.findByEmail(params.email)) {
+        if (LS_User.findByEmail(params.email.toLowerCase())) {
             flash.message = "Email already registered. Try logging in."
             redirect(controller: "webSurf", action: "Login")
             return
@@ -48,7 +48,7 @@ class LS_UserRegisterController {
         def user = new LS_User(
                 firstName: params.firstName,
                 lastName: params.lastName,
-                email: params.email,
+                email: params.email.toLowerCase(),
                 username: params.username,
                 password: params.password,
                 photo: photoFile.bytes,
@@ -70,7 +70,7 @@ class LS_UserRegisterController {
 
 
     def login() {
-        String email = params.email
+        String email = params.email.toLowerCase()
         String password = params.password
         if (!email || !password) {
             flash.message = "Please fill in all required fields."
@@ -92,5 +92,74 @@ class LS_UserRegisterController {
         session.invalidate()
         flash.message = "You have been logged out."
         redirect(action: "Login")
+    }
+    def updateProfile() {
+        LS_User userInstance = session.user  // Assuming session.user is a full LS_User object
+        if (!userInstance) {
+            flash.message = "User not found"
+            redirect(controller: "webSurf", action: "EditProfile")
+            return
+        }
+
+        // Only update if data is provided
+        if (params.firstName?.trim()) {
+            userInstance.firstName = params.firstName
+        }
+
+        if (params.lastName?.trim()) {
+            userInstance.lastName = params.lastName
+        }
+
+        if (params.username?.trim()) {
+            userInstance.username = params.username
+        }
+
+        def photoFile = request.getFile('photo')
+        if (photoFile && !photoFile.empty) {
+            userInstance.photo = photoFile.bytes
+        }
+
+        if (userInstance.validate()) {
+            userInstance.save(flush: true)
+            flash.message = "Profile updated successfully"
+            session.user = userInstance
+        } else {
+            flash.message = "There was an error updating your profile"
+        }
+
+        redirect(controller: "webSurf", action: "EditProfile")
+    }
+    def changePassword() {
+        def user = session.user
+        if (!user) {
+            flash.message = "User not found"
+            redirect(controller: "webSurf", action: "EditProfile")
+            return
+        }
+        def newPassword = params.newPassword?.trim()
+        def confirmPassword = params.confirmPassword?.trim()
+        if (!newPassword || !confirmPassword) {
+            flash.message = "Both fields are required"
+            redirect(controller: "webSurf", action: "EditProfile")
+            return
+        }
+        if (newPassword != confirmPassword) {
+            flash.message = "Passwords do not match"
+            redirect(controller: "webSurf", action: "EditProfile")
+            return
+        }
+        if (newPassword.length() < 6) {
+            flash.message = "Password must be at least 6 characters"
+            redirect(controller: "webSurf", action: "EditProfile")
+            return
+        }
+        user.password = newPassword  // 🔒 You should hash this before saving!
+        if (user.validate()) {
+            user.save(flush: true)
+            flash.message = "Password updated successfully"
+        } else {
+            flash.message = "Failed to update password"
+        }
+        redirect(controller: "webSurf", action: "EditProfile")
     }
 }

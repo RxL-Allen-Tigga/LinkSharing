@@ -36,6 +36,35 @@
     </div>
 </div>
 <!-- Modal -->
+<div class="modal fade" id="Share_Link_temp" tabindex="-1" aria-labelledby="ShareLinkLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="ShareLinkLabel">Subscribed Topics</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <g:if test="${subscribedTopics}">
+                    <ul class="list-group">
+                        <g:each in="${subscribedTopics}" var="topic">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${topic.name}
+                                <span class="badge bg-secondary">${topic.visibility}</span>
+                            </li>
+                        </g:each>
+                    </ul>
+                </g:if>
+                <g:else>
+                    <p class="text-muted">You are not subscribed to any topics yet.</p>
+                </g:else>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="Share_Link" tabindex="-1" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -122,40 +151,75 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="Create_Topic" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel3">Create Topic</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="modal-form-group ">
-                    <label for="exampleFirstName">Topic Name*</label>
-                    <input type="text" class="form-control" id="Name1" placeholder="Name">
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="col-2">
-                    Visibility*
+<form action="/topicOperations/createTopic" method="POST">
+    <div class="modal fade" id="Create_Topic" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Create Topic</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="col">
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Private
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Private</a></li>
-                        <li><a class="dropdown-item" href="#">Public</a></li>
-                    </ul>
+                <div class="modal-body">
+                    <div class="modal-form-group">
+                        <label for="Name1">Topic Name*</label>
+                        <input type="text" class="form-control" id="Name1" name="name" placeholder="Name" required>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary">Create</button>
+
+                <div class="modal-footer">
+                    <div class="col-2">
+                        Visibility*
+                    </div>
+
+                    <div class="col">
+                        <select name="visibility" class="form-select" required>
+                            <option value="PRIVATE">Private</option>
+                            <option value="PUBLIC">Public</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
+
+%{--<div class="modal fade" id="Create_Topic" tabindex="-1" aria-labelledby="exampleModalLabel"--}%
+%{--     aria-hidden="true">--}%
+%{--    <div class="modal-dialog">--}%
+%{--        <div class="modal-content">--}%
+%{--            <div class="modal-header">--}%
+%{--                <h1 class="modal-title fs-5" id="exampleModalLabel3">Create Topic</h1>--}%
+%{--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--}%
+%{--            </div>--}%
+
+%{--            <div class="modal-body">--}%
+%{--                <div class="modal-form-group ">--}%
+%{--                    <label for="exampleFirstName">Topic Name*</label>--}%
+%{--                    <input type="text" class="form-control" id="Name1" placeholder="Name">--}%
+%{--                </div>--}%
+%{--            </div>--}%
+
+%{--            <div class="modal-footer">--}%
+%{--                <div class="col-2">--}%
+%{--                    Visibility*--}%
+%{--                </div>--}%
+
+%{--                <div class="col">--}%
+%{--                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"--}%
+%{--                       data-bs-toggle="dropdown"--}%
+%{--                       aria-expanded="false">--}%
+%{--                        Private--}%
+%{--                    </a>--}%
+%{--                    <ul class="dropdown-menu">--}%
+%{--                        <li><a class="dropdown-item" href="#">Private</a></li>--}%
+%{--                        <li><a class="dropdown-item" href="#">Public</a></li>--}%
+%{--                    </ul>--}%
+%{--                </div>--}%
+%{--                <button type="button" class="btn btn-primary">Create</button>--}%
+%{--            </div>--}%
+%{--        </div>--}%
+%{--    </div>--}%
+%{--</div>--}%

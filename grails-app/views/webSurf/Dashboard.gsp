@@ -39,6 +39,13 @@
 <Header:navbar username="${session.user?.username}"/>
 
 <div class="container">
+    <div>
+        <g:if test="${flash.message}">
+            <div class="alert alert-warning" role="alert">
+                ${flash.message}
+            </div>
+        </g:if>
+    </div>
     <div class="row align-items-start mt-5">
         <div class="col ">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">

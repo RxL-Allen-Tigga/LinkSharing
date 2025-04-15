@@ -30,6 +30,12 @@ hibernate:
     use_second_level_cache: false
     use_query_cache: false
 grails:
+  grails:
+    profile: web
+    codegen:
+      defaultPackage: linksharing
+    gsp:
+      enable: true
   plugin:
     console:
       enabled: true
