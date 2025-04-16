@@ -210,24 +210,24 @@ body {
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input type="text" name="firstName" id="firstName" class="form-control"
-                               value="${userInstance?.firstName}">
+                               value="${userInstance?.firstName}" placeholder=${session.user.firstName}>
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <input type="text" name="lastName" id="lastName" class="form-control"
-                               value="${userInstance?.lastName}">
+                               value="${userInstance?.lastName}" placeholder=${session.user.lastName}>
                     </div>
 
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" class="form-control"
-                               value="${userInstance?.username}">
+                               value="${userInstance?.username}" placeholder=${session.user.username}>
                     </div>
 
                     <div class="mb-3">
                         <label for="photo">Photo</label>
-                        <input type="file" name="photo" id="photo" class="form-control">
+                        <input type="file" name="photo" id="photo" class="form-control" >
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update</button>

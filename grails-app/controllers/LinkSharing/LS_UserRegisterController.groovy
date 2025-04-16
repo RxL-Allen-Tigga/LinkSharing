@@ -91,7 +91,7 @@ class LS_UserRegisterController {
     def logout(){
         session.invalidate()
         flash.message = "You have been logged out."
-        redirect(action: "Login")
+        redirect(controller: "webSurf", action: "Login")
     }
     def updateProfile() {
         LS_User userInstance = session.user  // Assuming session.user is a full LS_User object

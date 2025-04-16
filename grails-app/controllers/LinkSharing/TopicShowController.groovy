@@ -1,0 +1,7 @@
+package LinkSharing
+
+
+class TopicShowController {
+
+
+}

@@ -35,121 +35,106 @@
         </div>
     </div>
 </div>
+
+<script>
+    function loadShareLinkModal() {
+        $.ajax({
+            url: "${createLink(controller: 'topicOperations', action: 'loadShareLinkModal')}",
+            type: "GET",
+            success: function (data) {
+                $("#modalBodyContent").html(data);
+                $("#Share_Link_temp").modal('show');
+            },
+            error: function () {
+                alert("Failed to load modal content");
+            }
+        });
+    }
+
+    // Example: open modal on button click
+    $(document).on("click", "#openShareModal", function () {
+        loadShareLinkModal();
+    });
+</script>
 <!-- Modal -->
-<div class="modal fade" id="Share_Link_temp" tabindex="-1" aria-labelledby="ShareLinkLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title" id="ShareLinkLabel">Subscribed Topics</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <g:if test="${subscribedTopics}">
-                    <ul class="list-group">
-                        <g:each in="${subscribedTopics}" var="topic">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                ${topic.name}
-                                <span class="badge bg-secondary">${topic.visibility}</span>
-                            </li>
-                        </g:each>
-                    </ul>
-                </g:if>
-                <g:else>
-                    <p class="text-muted">You are not subscribed to any topics yet.</p>
-                </g:else>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="Share_Link" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel1">Share Link</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="modal-form-group ">
-                    <label for="exampleFirstName">Link*</label>
-                    <input type="text" class="form-control" id="Link1" placeholder="Link">
+<form action="/topicOperations/shareLink" method="POST">
+    <div class="modal fade" id="Share_Link" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel_temp">Share Link</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-form-group ">
-                    <label for="exampleFirstName">Description*</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
-                </div>
-            </div>
+                <div class="modal-body">
+                    <div class="modal-form-group ">
+                        <label for="exampleFirstName">Link*</label>
+                        <input name="link" type="text" class="form-control" id="Link1_temp" placeholder="Link" required>
+                    </div>
 
-            <div class="modal-footer">
-                <div class="col-2">
-                    Topic*
+                    <div class="modal-form-group ">
+                        <label for="exampleFirstName">Description*</label>
+                        <textarea name="description" class="form-control" id="exampleFormControlTextarea1_temp" rows="10" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="topicSelect">Topic*</label>
+                        <select name="topicId" class="form-select" id="topicSelect" required>
+                            <g:each in="${subscribedTopics}" var="topic">
+                                <option value="${topic.id}">${topic.name} (${topic.visibility})</option>
+                            </g:each>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="col">
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Topic
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Private</a></li>
-                        <li><a class="dropdown-item" href="#">Public</a></li>
-                    </ul>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Share</button>
                 </div>
-                <button type="button" class="btn btn-primary">Share</button>
             </div>
         </div>
     </div>
-</div>
+</form>
+
 <!-- Modal -->
-<div class="modal fade" id="Share_Document" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel2">Share Document</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Document</label>
-                    <input class="form-control" type="file" id="formFile">
+<form action="/topicOperations/shareDocument" method="POST" enctype="multipart/form-data">
+    <div class="modal fade" id="Share_Document" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel2">Share Document</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-form-group ">
-                    <label for="exampleFirstName">Description*</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea2" rows="10"></textarea>
-                </div>
-            </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Document</label>
+                        <input class="form-control" type="file" id="formFile" name="documentFile" required>
+                    </div>
 
-            <div class="modal-footer">
-                <div class="col-2">
-                    Topic*
+                    <div class="modal-form-group">
+                        <label for="description">Description*</label>
+                        <textarea class="form-control" name="description" id="description" rows="5" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="topicSelect">Topic*</label>
+                        <select name="topicId" class="form-select" id="topicSelect1" required>
+                            <g:each in="${subscribedTopics}" var="topic">
+                                <option value="${topic.id}">${topic.name}</option>
+                            </g:each>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="col">
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Topic
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Private</a></li>
-                        <li><a class="dropdown-item" href="#">Public</a></li>
-                    </ul>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Share</button>
                 </div>
-                <button type="button" class="btn btn-primary">Share</button>
             </div>
         </div>
     </div>
-</div>
+</form>
+
 <!-- Modal -->
 <form action="/topicOperations/createTopic" method="POST">
     <div class="modal fade" id="Create_Topic" tabindex="-1" aria-labelledby="exampleModalLabel"

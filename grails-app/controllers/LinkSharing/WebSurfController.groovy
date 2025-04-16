@@ -10,9 +10,23 @@ class WebSurfController {
         }
     }
     def Dashboard() {
-        if (!session.user) {
+        def sessionUser = session.user
+        if (!sessionUser) {
             redirect(controller: "webSurf", action: "Login")
+            return
         }
+        def subscribedTopics = Subscription.findAllByUser(sessionUser)*.topic
+
+        LS_User user = session.user
+        def pageSize = 5
+        def page = params.int('page') ?: 1
+        def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
+            eq('user', sessionUser)
+            order('dateCreated', 'desc')
+        }
+        def totalSubscriptions = Subscription.countByUser(sessionUser)
+        def totalPages = Math.ceil(totalSubscriptions / pageSize)
+        render(view: 'Dashboard', model: [subscriptions: subscriptions, totalPages: totalPages, currentPage: page, subscribedTopics: subscribedTopics])
     }
     def EditProfile() {
         if (!session.user) {
