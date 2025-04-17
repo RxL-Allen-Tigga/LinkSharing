@@ -329,13 +329,11 @@ body {
                                         ${subscription.topic.name}
                                     </a>
                                 </h5>
-                                <h6>Created By: @${subscription.topic.createdBy.username}
-                                </h6>
                             </div>
 
                             <div class="row">
                                 <div class="col">
-                                    <h6>${subscription.user.username}</h6>
+                                    <h6>@${subscription.topic.createdBy.username}</h6>
                                 </div>
 
                                 <div class="col">
@@ -354,12 +352,18 @@ body {
                                         ${subscription.seriousness}
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Serious</a></li>
-                                        <li><a class="dropdown-item" href="#">Casual</a></li>
-                                        <li><a class="dropdown-item" href="#">UnSerious</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'SERIOUS'])}">Serious</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'CASUAL'])}">Casual</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'VERY_SERIOUS'])}">VERY_SERIOUS</a>
+                                        </li>
                                     </ul>
                                 </div>
-                                %{--<p>Creator: ${subscription.topic.createdBy.username} | Subscriber: ${session.user.username}</p>--}%
+                                %{--                                VISIBILITY--}%
                                 <div class="col">
                                     <g:if test="${subscription.topic.createdBy.id == session.user.id}">
                                         <a class="btn btn-primary dropdown-toggle" href="#" role="button"
@@ -367,25 +371,36 @@ body {
                                             ${subscription.topic.visibility}
                                         </a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Private</a></li>
-                                            <li><a class="dropdown-item" href="#">Public</a></li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: subscription.topic.id, visibility: 'PRIVATE'])}">
+                                                    Private
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: subscription.topic.id, visibility: 'PUBLIC'])}">
+                                                    Public
+                                                </a>
+                                            </li>
                                         </ul>
                                     </g:if>
                                 </div>
 
+                                %{--                                Delete--}%
                                 <div class="col-1">
                                     <g:if test="${subscription.topic.createdBy.id == session.user.id}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
-                                             fill="currentColor"
-                                             class="bi bi-trash3" viewBox="0 0 16 16">
-                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                        </svg>
-%{--                                        <a href="/topic/edit/${subscription.topic.id}" class="btn btn-warning">--}%
-%{--                                            Edit Topic--}%
-%{--                                        </a>--}%
+                                        <g:link controller="modifyTopic" action="updateIsDelete"
+                                                id="${subscription.topic.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                                 fill="currentColor"
+                                                 class="bi bi-trash3" viewBox="0 0 16 16">
+                                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                            </svg>
+                                        </g:link>
                                     </g:if>
                                 </div>
-
+                                %{--                                Edit--}%
                                 <div class="col-1">
                                     <g:if test="${subscription.topic.createdBy.id == session.user.id}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25"
@@ -396,20 +411,14 @@ body {
                                             <path fill-rule="evenodd"
                                                   d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                         </svg>
-                                    %{--                                        <a href="/topic/delete/${subscription.topic.id}" class="btn btn-danger">--}%
-                                    %{--                                            Delete Topic--}%
-                                    %{--                                        </a>--}%
                                     </g:if>
                                 </div>
-
+                                %{--                                Invite--}%
                                 <div class="col-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
                                          class="bi bi-envelope-fill" viewBox="0 0 16 16">
                                         <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
                                     </svg>
-                                    %{--                                    <a href="/topic/invite/${subscription.topic.id}" class="btn btn-success">--}%
-                                    %{--                                        Send Invitation--}%
-                                    %{--                                    </a>--}%
                                 </div>
                             </div>
                         </div>
@@ -418,13 +427,18 @@ body {
                 </g:each>
 
             <!-- Pagination Controls -->
-                <div class="pagination">
-                    <g:if test="${currentPage > 1}">
-                        <a href="?page=${currentPage - 1}" class="btn btn-primary">Previous</a>
-                    </g:if>
-                    <g:if test="${currentPage < totalPages}">
-                        <a href="?page=${currentPage + 1}" class="btn btn-primary">Next</a>
-                    </g:if>
+                <div class="pagination row">
+                    <div class="col-10">
+                        <g:if test="${currentPage > 1}">
+                            <a href="?page=${currentPage - 1}" class="btn btn-primary">Previous</a>
+                        </g:if>
+                    </div>
+
+                    <div class="col">
+                        <g:if test="${currentPage < totalPages}">
+                            <a href="?page=${currentPage + 1}" class="btn btn-primary">Next</a>
+                        </g:if>
+                    </div>
                 </div>
             </div>
             <br>

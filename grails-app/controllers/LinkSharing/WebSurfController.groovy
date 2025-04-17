@@ -15,7 +15,13 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
             return
         }
-        def subscribedTopics = Subscription.findAllByUser(sessionUser)*.topic
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", sessionUser)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+
 
         LS_User user = session.user
         def pageSize = 5
@@ -23,6 +29,9 @@ class WebSurfController {
         def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
             eq('user', sessionUser)
             order('dateCreated', 'desc')
+            topic {
+                eq("isDeleted", false)
+            }
         }
         def totalSubscriptions = Subscription.countByUser(sessionUser)
         def totalPages = Math.ceil(totalSubscriptions / pageSize)
