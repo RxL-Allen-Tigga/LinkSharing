@@ -31,4 +31,5 @@ class ModifyReadingItemController {
         // Redirect back to the referring page
         redirect(uri: request.getHeader("referer") ?: "/")
     }
+
 }

@@ -19,6 +19,7 @@ class WebSurfController {
 //        User subscribed topics
         def subscribedTopics = Subscription.createCriteria().list {
             eq("user", sessionUser)
+            eq("isDeleted",false)
             topic {
                 eq("isDeleted", false)
             }
@@ -30,6 +31,7 @@ class WebSurfController {
         def page = params.int('page') ?: 1
         def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
             eq('user', sessionUser)
+            eq("isDeleted",false)
             order('dateCreated', 'desc')
             topic {
                 eq("isDeleted", false)
