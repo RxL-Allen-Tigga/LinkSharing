@@ -26,7 +26,7 @@ class TopicMiscellaneousService {
             def subscription = new Subscription(
                     topic: topic,
                     user: user,
-                    seriousness: Subscription.Seriousness.CASUAL
+                    seriousness: Subscription.Seriousness.VERY_SERIOUS
             )
             if (topic.validate()) {
                 topic.save(flush: true)

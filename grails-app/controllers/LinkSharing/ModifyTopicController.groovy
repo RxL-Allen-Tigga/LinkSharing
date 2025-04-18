@@ -2,6 +2,7 @@ package LinkSharing
 
 import grails.gorm.transactions.Transactional
 import org.springframework.web.multipart.MultipartFile
+
 @Transactional
 
 class ModifyTopicController {
@@ -11,6 +12,10 @@ class ModifyTopicController {
 
         if (!topic) {
             flash.error = "Topic not found"
+        } else if (session?.user?.admin == true) {
+            topic.visibility = Topic.Visibility.valueOf(visibility)
+            topic.save(flush: true)
+            flash.message = "Visibility updated to ${visibility}"
         } else if (topic.createdBy.id != session.user?.id) {
             flash.error = "Unauthorized access"
         } else if (visibility in Topic.Visibility.values()*.name()) {
@@ -23,6 +28,7 @@ class ModifyTopicController {
 
         redirect(uri: request.getHeader("referer") ?: "/")
     }
+
     def updateIsDelete(Long id) {
         def topic = Topic.get(id)
 
@@ -31,19 +37,27 @@ class ModifyTopicController {
             redirect(uri: request.getHeader("referer") ?: "/")
             return
         }
-
-        if (topic.createdBy.id != session.user.id) {
+        else if(session?.user?.admin == true){
+            topic.isDeleted = true
+            if (topic.save(flush: true)) {
+                flash.message = "Topic marked as deleted"
+            } else {
+                flash.message = "Failed to delete topic"
+            }
+        }
+        else if (topic.createdBy.id != session.user.id) {
             flash.message = "Unauthorized"
             redirect(uri: request.getHeader("referer") ?: "/")
             return
         }
-
-        topic.isDeleted = true
-        if (topic.save(flush: true)) {
-            flash.message = "Topic marked as deleted"
-        } else {
-            flash.message = "Failed to delete topic"
+        else{
+            topic.isDeleted = true
+            if (topic.save(flush: true)) {
+                flash.message = "Topic marked as deleted"
+            } else {
+                flash.message = "Failed to delete topic"
+            }
         }
-        redirect(uri: request.getHeader("referer") ?: "/")
+        redirect(controller: "webSurf", action: "Dashboard")
     }
 }

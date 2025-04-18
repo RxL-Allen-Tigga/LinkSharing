@@ -210,19 +210,19 @@ body {
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input type="text" name="firstName" id="firstName" class="form-control"
-                               value="${userInstance?.firstName}" placeholder=${session.user.firstName}>
+                               value="${userInstance?.firstName}" placeholder=${session.user.firstName} onfocus="enablePlaceholderEdit(this)">
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <input type="text" name="lastName" id="lastName" class="form-control"
-                               value="${userInstance?.lastName}" placeholder=${session.user.lastName}>
+                               value="${userInstance?.lastName}" placeholder=${session.user.lastName} oninput="updatePlaceholder(this)">
                     </div>
 
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" class="form-control"
-                               value="${userInstance?.username}" placeholder=${session.user.username}>
+                               value="${userInstance?.username}" placeholder=${session.user.username} oninput="updatePlaceholder(this)">
                     </div>
 
                     <div class="mb-3">
@@ -233,6 +233,13 @@ body {
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
+            <script>
+                function enablePlaceholderEdit(inputElement) {
+                    inputElement.addEventListener('input', function() {
+                        inputElement.setAttribute('placeholder', inputElement.value || "${session.user.lastName}");
+                    });
+                }
+            </script>
             <br>
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row">
