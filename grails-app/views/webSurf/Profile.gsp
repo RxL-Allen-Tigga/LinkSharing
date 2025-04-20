@@ -39,53 +39,275 @@ body {
 </style>
 
 <body>
+<form action="${createLink(controller: 'topicOperations', action: 'editTopic')}" method="POST">
+    <div class="modal fade" id="Edit_Topic" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit Topic</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="edit-topic-id" name="id">
+
+                    <div class="modal-form-group">
+                        <label for="edit-topic-name">Topic Name*</label>
+                        <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
+                               required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Apply Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function openEditModal(topicId, topicName) {
+        document.getElementById('edit-topic-id').value = topicId;
+        document.getElementById('edit-topic-name').value = topicName;
+        let editModal = new bootstrap.Modal(document.getElementById('Edit_Topic'));
+        editModal.show();
+    }
+</script>
 <Header:navbar username="${session.user?.username}"/>
 <div class="container">
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row">
-                    <h3>Your Profile</h3>
+                    <h3>Profile</h3>
                 </div>
+
                 <div class="row">
-                    <div class="col-3">
-                        <img src="data:image/jpeg;base64,${session.user?.photo ? session.user?.photo.encodeBase64() : ''}" alt="User Photo" width="100%" height="auto">
+                    <div class="col-4">
+                        <img src="data:image/jpeg;base64,${userProfile?.photo ? userProfile?.photo.encodeBase64() : ''}"
+                             alt="User Photo" width="100%" height="auto">
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                <h5>${session.user?.firstName} ${session.user?.lastName}
+                                <h5>${userProfile?.firstName} ${userProfile?.lastName}
                                 </h5>
                             </div>
                         </div>
+
                         <div class="row">
-                            <h6>${session.user?.username}</h6>
+                            <h6>@${userProfile?.username}</h6>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <h6>Subscriptions</h6>
                             </div>
+
                             <div class="col">
-                                <h6>Posts</h6>
+                                <h6>Topics</h6>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
-                                <h6 style="color: blue;">619</h6>
+                                <h6 style="color: blue;">${userSubscribedTopicsCount}</h6>
                             </div>
+
                             <div class="col">
-                                <h6 style="color: blue;">777</h6>
+                                <h6 style="color: blue;">${userCreatedTopicsCount}</h6>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <br>
+
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row">
-                    <h3>Top Trending Topics</h3>
+                    <h3>Topics</h3>
                 </div>
-                <br>
+                <hr>
+                <g:each in="${userCreatedTopics}" var="row">
+                    <% def topic = row[0] %>
+                    <% def subCount = row[1] %>
+                    <% def resCount = row[2] %>
+                    <% def subscription = row[3] %>
+                    <g:if test="${topic.visibility == LinkSharing.Topic.Visibility.PUBLIC ||
+                            session.user.admin || userProfile.id == session.user.id}">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="data:image/jpeg;base64,${userProfile?.photo ? userProfile?.photo.encodeBase64() : ''}"
+                                     alt="User Photo" width="100%" height="auto">
+                            </div>
+
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>(${topic.visibility})
+                                        </h5>
+                                    </div>
+                                    <div class="col-3">
+                                        <g:if test="${!subscription}">
+                                            <a class="link-opacity-60-hover" href="${createLink(controller: 'modifySubscription',
+                                                    action: 'updateSubscribeTopic',params: [userid: session.user.id, topicid: topic.id])}">
+                                                Subscribe
+                                            </a>
+                                        </g:if>
+                                        <g:if test="${subscription && topic.createdBy.id!=session.user.id}">
+                                            <a class="link-opacity-60-hover" href="${createLink(controller: 'modifySubscription',
+                                                    action: 'updateUnsubscribeTopic',params: [userid: session.user.id, topicid: topic.id])}">
+                                                UnSubscribe
+                                            </a>
+                                        </g:if>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>${topic.name}</h6>
+                                    </div>
+
+                                    <div class="col">
+                                        <h6>${subCount} Subscribers</h6>
+                                    </div>
+
+                                    <div class="col">
+                                        <h6>${resCount} Posts</h6>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <g:if test="${subscription}">
+                                            <a class="btn btn-primary dropdown-toggle"
+                                               href="#" role="button"
+                                               data-bs-toggle="dropdown"
+                                               aria-expanded="false">
+                                                ${subscription?.seriousness}
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: subscription.id, seriousness: 'SERIOUS'])}">SERIOUS</a>
+                                                </li>
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: subscription.id, seriousness: 'CASUAL'])}">CASUAL</a>
+                                                </li>
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: subscription.id, seriousness: 'VERY_SERIOUS'])}">VERY_SERIOUS</a>
+                                                </li>
+                                            </ul>
+                                        </g:if>
+                                    </div>
+
+                                    <div class="col">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
+                                                ${topic.visibility}
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: topic.id, visibility: 'PRIVATE'])}">
+                                                        Private
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: topic.id, visibility: 'PUBLIC'])}">
+                                                        Public
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </g:if>
+                                    </div>
+
+                                    <div class="col-1">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <g:link controller="modifyTopic" action="updateIsDelete"
+                                                    id="${topic.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                                     fill="currentColor"
+                                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                                </svg>
+                                            </g:link>
+                                        </g:if>
+                                    </div>
+
+                                    <div class="col-1">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <a href="#"
+                                               onclick="openEditModal(${topic.id}, '${topic.name?.replaceAll("'", "\\\\'")}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                     height="auto" fill="currentColor"
+                                                     class="bi bi-pencil-square"
+                                                     viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                    <path fill-rule="evenodd"
+                                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                                </svg>
+                                            </a>
+                                        </g:if>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                             fill="currentColor"
+                                             class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr/>
+                    </g:if>
+                </g:each>
+            </div>
+
+            <div class="border rounded border-dark p-2 mb-2 text-bg-light">
+                <g:each in="${subscriptionData}" var="row">
+                    <% def topic = row.topic %>
+                    <% def otherSub = row.otherUserSub %>
+                    <% def sessionSub = row.sessionUserSub %>
+                    <% def activeSubCount = row.activeSubCount %>
+                    <% def activePostCount = row.activePostCount %>
+
+                    <div class="topic-card">
+                        <h4>${topic.name}</h4>
+                        <p>Created by: ${topic.createdBy.username}</p>
+                        <p>Visibility: ${topic.visibility}</p>
+
+                        <p>Other user subscribed as: <strong>${otherSub.seriousness}</strong></p>
+
+                        <p><strong>${activeSubCount}</strong> active subscribers</p>
+                        <p><strong>${activePostCount}</strong> active posts</p>
+
+                        <g:if test="${sessionSub}">
+                            <p>You are also <strong>subscribed</strong> to this topic as: <em>${sessionSub.seriousness}</em></p>
+                        </g:if>
+                        <g:else>
+                            <p>You are <strong>not subscribed</strong> to this topic.</p>
+                        </g:else>
+                    </div>
+                    <hr/>
+                </g:each>
+            </div>
+            <div class="border rounded border-dark p-2 mb-2 text-bg-light">
+                <div class="row">
+                    <h3>Subscriptions</h3>
+                </div>
+                <hr>
+
+
                 <div class="row">
                     <div class="col">
                         <h5>
@@ -93,17 +315,20 @@ body {
                                 Grails</a>
                         </h5>
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h6>Subscriptions</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Posts</h6>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col">
                         <div class="row">
@@ -118,6 +343,7 @@ body {
                                     <li><a class="dropdown-item" href="#">UnSerious</a></li>
                                 </ul>
                             </div>
+
                             <div class="col">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
                                      class="bi bi-envelope-fill" viewBox="0 0 16 16">
@@ -126,11 +352,13 @@ body {
                             </div>
                         </div>
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h6 style="color: blue;">619</h6>
                             </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">777</h6>
                             </div>
@@ -138,6 +366,7 @@ body {
                     </div>
                 </div>
                 <hr>
+
                 <div class="row">
                     <div class="col">
                         <h5>
@@ -145,64 +374,20 @@ body {
                                 Grails</a>
                         </h5>
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h6>Subscriptions</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Posts</h6>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h5>
-                                    <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                        Subscribe</a>
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6 style="color: blue;">619</h6>
-                            </div>
-                            <div class="col">
-                                <h6 style="color: blue;">777</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="border rounded border-dark p-2 mb-2 text-bg-light">
-                <div class="row">
-                    <h3>Your Subscriptions</h3>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <h5>
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Grails</a>
-                        </h5>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6>Subscriptions</h6>
-                            </div>
-                            <div class="col">
-                                <h6>Posts</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col">
                         <div class="row">
@@ -217,6 +402,7 @@ body {
                                     <li><a class="dropdown-item" href="#">UnSerious</a></li>
                                 </ul>
                             </div>
+
                             <div class="col">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
                                      class="bi bi-envelope-fill" viewBox="0 0 16 16">
@@ -225,63 +411,13 @@ body {
                             </div>
                         </div>
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h6 style="color: blue;">619</h6>
                             </div>
-                            <div class="col">
-                                <h6 style="color: blue;">777</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col">
-                        <h5>
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Grails</a>
-                        </h5>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6>Subscriptions</h6>
-                            </div>
-                            <div class="col">
-                                <h6>Posts</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Serious
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Serious</a></li>
-                                    <li><a class="dropdown-item" href="#">UnSerious</a></li>
-                                </ul>
-                            </div>
-                            <div class="col">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6 style="color: blue;">619</h6>
-                            </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">777</h6>
                             </div>
@@ -290,12 +426,14 @@ body {
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row">
                     <div class="col">
                         <h3>Posts: "Grails"</h3>
                     </div>
+
                     <div class="col">
                         <div class="input-group">
                             <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
@@ -306,6 +444,7 @@ body {
                     </div>
                 </div>
                 <br>
+
                 <div class="row p-2 mb-2">
                     <div class="row">
                         <h5>
@@ -313,15 +452,17 @@ body {
                                 Grails</a>
                         </h5>
                     </div>
+
                     <div class="row">
                         <p>To dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
-                            o dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
-                            o dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
+                        ressor's deat with.
+                        o dread o'er bear the pative shocks their currenter regards of
+                        ressor's deat with.
+                        o dread o'er bear the pative shocks their currenter regards of
+                        ressor's deat with.
                         </p>
                     </div>
+
                     <div class="row">
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
@@ -329,18 +470,21 @@ body {
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 View full site</a>
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 Mark as read</a>
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 View post</a>
@@ -350,6 +494,7 @@ body {
                     </div>
                 </div>
                 <hr>
+
                 <div class="row p-2 mb-2">
                     <div class="row">
                         <h5>
@@ -357,15 +502,17 @@ body {
                                 Grails</a>
                         </h5>
                     </div>
+
                     <div class="row">
                         <p>To dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
-                            o dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
-                            o dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.
+                        ressor's deat with.
+                        o dread o'er bear the pative shocks their currenter regards of
+                        ressor's deat with.
+                        o dread o'er bear the pative shocks their currenter regards of
+                        ressor's deat with.
                         </p>
                     </div>
+
                     <div class="row">
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
@@ -373,18 +520,21 @@ body {
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 View full site</a>
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 Mark as read</a>
                             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                                   rel="stylesheet">
                         </div>
+
                         <div class="col">
                             <a class="link-opacity-60-hover" href="https://www.google.com/">
                                 View post</a>

@@ -125,10 +125,102 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
         }
     }
-    def Profile() {
+    def Profile(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def userProfile = LS_User.get(id)
+        def userSubscribedTopicsCount = Topic.createCriteria().count {
+            createAlias("subscription", "s")
+            eq("s.user", userProfile)
+            eq("s.isDeleted", false)
+            eq("isDeleted", false)
+        }
+        def userCreatedTopicsCount = Topic.createCriteria().count {
+            eq("createdBy", userProfile)
+            eq("isDeleted", false)
+        }
+
+        def topics = Topic.findAllByCreatedByAndIsDeleted(userProfile, false)
+        def userCreatedTopics = Topic.findAllByCreatedByAndIsDeleted(userProfile, false).collect { topic ->
+            def subCount = Subscription.createCriteria().get {
+                eq("topic", topic)
+                eq("isDeleted", false)
+                projections {
+                    countDistinct("id")
+                }
+            } ?: 0
+
+            def resCount = LS_Resource.createCriteria().get {
+                eq("topic", topic)
+                eq("isDeleted", false)
+                projections {
+                    countDistinct("id")
+                }
+            } ?: 0
+
+            def subscription = Subscription.createCriteria().get {
+                eq("topic", topic)
+                eq("user", session.user)
+                eq("isDeleted", false)
+            }
+
+            return [topic, subCount, resCount, subscription]
+        }
+
+        // Define subscriptions of the profile user
+        def subscriptions = Subscription.createCriteria().list {
+            eq("user", userProfile)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }
+
+// Build detailed data for each subscription
+        def subscriptionData = subscriptions.collect { sub ->
+            def topic = sub.topic
+
+            // Subscription of session user to the same topic
+            def sessionUserSub = Subscription.findByUserAndTopicAndIsDeleted(session.user, topic, false)
+
+            // Count of active subscriptions on the topic
+            def activeSubCount = Subscription.createCriteria().get {
+                eq("topic", topic)
+                eq("isDeleted", false)
+                projections {
+                    countDistinct("id")
+                }
+            } ?: 0
+
+            // Count of active posts/resources on the topic
+            def activePostCount = LS_Resource.createCriteria().get {
+                eq("topic", topic)
+                eq("isDeleted", false)
+                projections {
+                    countDistinct("id")
+                }
+            } ?: 0
+
+            return [
+                    otherUserSub    : sub,
+                    topic           : topic,
+                    sessionUserSub  : sessionUserSub,
+                    activeSubCount  : activeSubCount,
+                    activePostCount : activePostCount
+            ]
+        }
+
+        render(view: 'Profile',model: [
+                id: id,
+                userProfile: userProfile,
+                userSubscribedTopicsCount: userSubscribedTopicsCount,
+                userCreatedTopicsCount: userCreatedTopicsCount,
+//                Topics
+                userCreatedTopics: userCreatedTopics,
+//                Subscriptions
+                subscriptionData: subscriptionData
+        ])
     }
     def Search() {
         if (!session.user) {

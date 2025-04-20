@@ -143,13 +143,13 @@ body {
 
                     <div class="col">
                         <div class="row">
-                            <g:link controller="webSurf" action="Profile">
                                 <h5>${session.user?.firstName} ${session.user?.lastName}</h5>
-                            </g:link>
                         </div>
 
                         <div class="row">
-                            <h6>@${session.user?.username}</h6>
+                            <g:link controller="webSurf" action="Profile" params="[id: session.user?.id]">
+                                <h6>@${session.user?.username}</h6>
+                            </g:link>
                         </div>
 
                         <div class="row">
@@ -403,16 +403,20 @@ body {
 
                         <div class="col">
                             <div class="row">
+                                <div class="col">
                                 <h5>
                                     <a class="link-opacity-60-hover" href="/topic/show/${subscription.topic.id}">
                                         ${subscription.topic.name}
                                     </a>
                                 </h5>
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="col">
-                                    <h6>@${subscription.topic.createdBy.username}</h6>
+                                    <g:link controller="webSurf" action="Profile" params="[id: subscription.topic?.createdBy?.id]">
+                                        <h6>@${subscription.topic.createdBy.username}</h6>
+                                    </g:link>
                                 </div>
 
                                 <div class="col">
@@ -582,7 +586,9 @@ body {
                             <!-- Creator, Subscribers, Posts -->
                             <div class="row">
                                 <div class="col">
-                                    <h6>@${map.topic.createdBy.username}</h6>
+                                    <g:link controller="webSurf" action="Profile" params="[id: map.topic.createdBy.id]">
+                                        <h6>@${map.topic.createdBy.username}</h6>
+                                    </g:link>
                                 </div>
 
                                 <div class="col">
@@ -897,9 +903,9 @@ body {
                                 </div>
 
                                 <div class="col">
-                                    <h6>
-                                        @${totalunread.resource.createdBy.username}
-                                    </h6>
+                                    <g:link controller="webSurf" action="Profile" params="[id: totalunread.resource?.createdBy?.id]">
+                                        <h6>@${totalunread.resource.createdBy.username}</h6>
+                                    </g:link>
                                 </div>
                             </div>
 

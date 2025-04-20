@@ -77,9 +77,6 @@ class HeaderTagLib {
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="/webSurf/Profile">Profile</a>
-                        </li>
-                        <li>
                             <a class="dropdown-item" href="/webSurf/EditProfile">Edit Profile</a>
                         </li>
                         <li>
