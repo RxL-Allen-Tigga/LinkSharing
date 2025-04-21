@@ -38,6 +38,89 @@ body {
 </style>
 
 <body>
+<form action="${createLink(controller: 'topicOperations', action: 'editTopic')}" method="POST">
+    <div class="modal fade" id="Edit_Topic" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit Topic</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="edit-topic-id" name="id">
+
+                    <div class="modal-form-group">
+                        <label for="edit-topic-name">Topic Name*</label>
+                        <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
+                               required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Apply Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function openEditModal(topicId, topicName) {
+        document.getElementById('edit-topic-id').value = topicId;
+        document.getElementById('edit-topic-name').value = topicName;
+        let editModal = new bootstrap.Modal(document.getElementById('Edit_Topic'));
+        editModal.show();
+    }
+</script>
+<div class="modal fade" id="Show_All_Subscriptions" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">My Subscriptions</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-form-group">
+                    <ul class="row list-group">
+                        <g:each in="${userSubscribedTopics}" var="topic">
+                            <li class="list-group-item">
+                                ${topic.name} (${topic.visibility}) : @${topic.createdBy.username}
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Show_User_Created_Topics" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">My Created Topics</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-form-group">
+                    <ul class="row list-group">
+                        <g:each in="${userCreatedTopics}" var="topic">
+                            <li class="list-group-item">
+                                ${topic.name} (${topic.visibility})
+                            </li>
+                        </g:each>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <Header:navbar username="${session.user?.username}"/>
 <div class="container">
     <div>
@@ -65,22 +148,28 @@ body {
                             </div>
                         </div>
                         <div class="row">
-                            <h6>@${session.user?.username}</h6>
+                            <g:link controller="webSurf" action="Profile" params="[id: session.user?.id]">
+                                <h6>@${session.user?.username}</h6>
+                            </g:link>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <h6>Subscriptions</h6>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#Show_All_Subscriptions">
+                                    <h6>Subscriptions</h6>
+                                </a>
                             </div>
                             <div class="col">
-                                <h6>Posts</h6>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#Show_User_Created_Topics">
+                                    <h6>Topics</h6>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <h6 style="color: blue;">619</h6>
+                                <h6 style="color: blue;">${userSubscribedTopicsCount}</h6>
                             </div>
                             <div class="col">
-                                <h6 style="color: blue;">777</h6>
+                                <h6 style="color: blue;">${userCreatedTopicsCount}</h6>
                             </div>
                         </div>
                     </div>
@@ -101,103 +190,123 @@ body {
                         </div>
                     </div>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-2">
-                        <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <input type="email" class="form-control" id="text"
-                                       aria-describedby="emailHelp" placeholder="Grails">
-                            </div>
-                            <div class="col">
-                                <button type="submit" class="btn btn-primary">save</button>
-                            </div>
+                <hr>
+                <g:each in="${subscriptions}" var="subscription">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="data:image/jpeg;base64,${subscription.topic.createdBy?.photo?.encodeBase64()?.toString()}"
+                                 alt="Profile Image" width="100%" height="auto">
                         </div>
-                        <br>
-                        <div class="row">
-                            <div class="col">
-                                <h6>@user_name</h6>
-                            </div>
-                            <div class="col">
-                                <h6>Subscriptions</h6>
-                            </div>
-                            <div class="col">
-                                <h6>Posts</h6>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                            </div>
-                            <div class="col">
-                                <h6 style="color: blue;">619</h6>
-                            </div>
-                            <div class="col">
-                                <h6 style="color: blue;">777</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Serious
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Serious</a></li>
-                                    <li><a class="dropdown-item" href="#">UnSerious</a></li>
-                                </ul>
-                            </div>
-                            <div class="col">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Private
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Private</a></li>
-                                    <li><a class="dropdown-item" href="#">Public</a></li>
-                                </ul>
-                            </div>
-                            <div class="col">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                            </div>
-                            <div class="col-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                                </svg>
-                            </div>
-                            <div class="col-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd"
-                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                </svg>
-                            </div>
-                            <div class="col-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-trash3" viewBox="0 0 16 16">
-                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
 
-                </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <g:link controller="webSurf" action="Topic" params="[id: subscription.topic?.id]">
+                                        <h5>${subscription.topic.name}</h5>
+                                    </g:link>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <g:link controller="webSurf" action="Profile"
+                                            params="[id: subscription.topic?.createdBy?.id]">
+                                        <h6>@${subscription.topic.createdBy.username}</h6>
+                                    </g:link>
+                                </div>
+
+                                <div class="col">
+                                    <h6>${subscription.topic.subscription?.size()} Subscribers</h6>
+                                </div>
+
+                                <div class="col">
+                                    <h6>${subscription.topic.resource?.size()} Posts</h6>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                       data-bs-toggle="dropdown" aria-expanded="false">
+                                        ${subscription.seriousness}
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'SERIOUS'])}">SERIOUS</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'CASUAL'])}">CASUAL</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                               href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness', params: [id: subscription.id, seriousness: 'VERY_SERIOUS'])}">VERY_SERIOUS</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                %{--                                VISIBILITY--}%
+                                <div class="col">
+                                    <g:if test="${subscription?.topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                        <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                           data-bs-toggle="dropdown" aria-expanded="false">
+                                            ${subscription.topic.visibility}
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: subscription.topic.id, visibility: 'PRIVATE'])}">
+                                                    Private
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: subscription.topic.id, visibility: 'PUBLIC'])}">
+                                                    Public
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </g:if>
+                                </div>
+
+                                %{--                                Delete--}%
+                                <div class="col-1">
+                                    <g:if test="${subscription.topic.createdBy.id == session.user.id || session?.user?.admin == true}">
+                                        <g:link controller="modifyTopic" action="updateIsDelete"
+                                                id="${subscription.topic.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                                 fill="currentColor"
+                                                 class="bi bi-trash3" viewBox="0 0 16 16">
+                                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                            </svg>
+                                        </g:link>
+                                    </g:if>
+                                </div>
+                                %{--                                Edit--}%
+                                <div class="col-1">
+                                    <g:if test="${subscription.topic.createdBy.id == session.user.id || session?.user?.admin == true}">
+                                        <a href="#"
+                                           onclick="openEditModal(${subscription.topic.id}, '${subscription.topic.name?.replaceAll("'", "\\\\'")}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                 height="auto" fill="currentColor"
+                                                 class="bi bi-pencil-square"
+                                                 viewBox="0 0 16 16">
+                                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                <path fill-rule="evenodd"
+                                                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                            </svg>
+                                        </a>
+                                    </g:if>
+                                </div>
+                                %{--                                Invite--}%
+                                <div class="col-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
+                                         class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </g:each>
             </div>
         </div>
         <div class="col">

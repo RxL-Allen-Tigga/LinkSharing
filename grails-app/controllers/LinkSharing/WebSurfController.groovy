@@ -117,8 +117,50 @@ class WebSurfController {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def userSubscribedTopics = Topic.createCriteria().list {
+            createAlias("subscription", "s")
+            eq("s.user", session.user)
+            eq("s.isDeleted", false)
+            eq("isDeleted", false)
+            order("name", "asc")
+        }
+        def userSubscribedTopicsCount = Topic.createCriteria().count {
+            createAlias("subscription", "s")
+            eq("s.user", session.user)
+            eq("s.isDeleted", false)
+            eq("isDeleted", false)
+        }
+        def userCreatedTopics = Topic.createCriteria().list {
+            eq("createdBy", session.user)
+            eq("isDeleted", false)
+            order("name", "asc")
+        }
+        def userCreatedTopicsCount = Topic.createCriteria().count {
+            eq("createdBy", session.user)
+            eq("isDeleted", false)
+        }
+
+        def subscriptions = Subscription.createCriteria().list() {
+            eq('user', session.user)
+            eq("isDeleted",false)
+            order('dateCreated', 'desc')
+            topic {
+                eq("isDeleted", false)
+            }
+        }
+        render(view: 'EditProfile', model: [
+                userSubscribedTopics: userSubscribedTopics,
+                userSubscribedTopicsCount: userSubscribedTopicsCount,
+                userCreatedTopics: userCreatedTopics,
+                userCreatedTopicsCount: userCreatedTopicsCount,
+                subscriptions: subscriptions
+        ])
     }
     def Login() {
+//        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(sessionUser)
+//        render(view: 'EditProfile', model: [
+//                trendingtopicDataList: trendingtopicDataList
+//        ])
     }
     def Post() {
         if (!session.user) {
@@ -227,9 +269,89 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
         }
     }
-    def Topic() {
+    def Topic(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
+            return // important to stop further execution
         }
+
+        def userTopic = Topic.findByIdAndIsDeleted(id, false)
+
+        def activeSubscriptionCount = Subscription.createCriteria().get {
+            eq("topic", userTopic)
+            eq("isDeleted", false)
+            projections {
+                countDistinct("id")
+            }
+        } ?: 0
+
+        def activeResourceCount = LS_Resource.createCriteria().get {
+            eq("topic", userTopic)
+            eq("isDeleted", false)
+            projections {
+                countDistinct("id")
+            }
+        } ?: 0
+
+        def userSubscription = Subscription.findByUserAndTopicAndIsDeleted(session.user, userTopic, false)
+
+        def topicId = 123L // replace with your topic ID
+
+        def topicSubscribers = LS_User.executeQuery("""
+        select new map(
+            u as user,
+            (select count(distinct t1.id)
+             from Topic t1
+             where t1.createdBy = u and t1.visibility = 'PUBLIC' and t1.isDeleted = false) as publicTopicCount,
+            (select count(distinct r1.id)
+             from LS_Resource r1
+             where r1.createdBy = u and r1.isDeleted = false and r1.topic.visibility = 'PUBLIC') as publicPostCount
+        )
+        from Subscription s
+        join s.user u
+        join s.topic t
+        where s.isDeleted = false
+          and t.isDeleted = false
+          and t.id = :topicId
+    """, [topicId: userTopic.id])
+        // Step 1: Get subscribed users
+//        def subscribedUsers = Subscription.createCriteria().list {
+//            createAlias("topic", "t")
+//            eq("isDeleted", false)
+//            eq("t.isDeleted", false)
+//            eq("t.id", userTopic.id)
+//            projections {
+//                property("user") // Get the user object directly
+//            }
+//        }
+//        def topicSubscribers = subscribedUsers.collect { user ->
+//            def publicTopicCount = Topic.createCriteria().count {
+//                eq("createdBy", user)
+//                eq("visibility", LinkSharing.Topic.Visibility.PUBLIC)  // Use fully-qualified enum reference
+//                eq("isDeleted", false)
+//            }
+//
+//            def publicPostCount = LS_Resource.createCriteria().count {
+//                eq("createdBy", user)
+//                eq("isDeleted", false)
+//                topic {
+//                    eq("visibility", LinkSharing.Topic.Visibility.PUBLIC)  // Same for nested topic
+//                }
+//            }
+//
+//            return [
+//                    user: user,
+//                    publicTopicCount: publicTopicCount,
+//                    publicPostCount: publicPostCount
+//            ]
+//        }
+
+        render(view: 'Topic', model: [
+                userTopic               : userTopic,
+                activeSubscriptionCount: activeSubscriptionCount,
+                activeResourceCount    : activeResourceCount,
+                userSubscription       : userSubscription,
+                topicSubscribers: topicSubscribers
+        ])
     }
 }

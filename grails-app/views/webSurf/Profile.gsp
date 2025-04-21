@@ -145,19 +145,22 @@ body {
                             <div class="col">
                                 <div class="row">
                                     <div class="col">
-                                        <h5>(${topic.visibility})
+                                        <h5>${topic.name} (${topic.visibility})
                                         </h5>
                                     </div>
+
                                     <div class="col-3">
                                         <g:if test="${!subscription}">
-                                            <a class="link-opacity-60-hover" href="${createLink(controller: 'modifySubscription',
-                                                    action: 'updateSubscribeTopic',params: [userid: session.user.id, topicid: topic.id])}">
+                                            <a class="link-opacity-60-hover"
+                                               href="${createLink(controller: 'modifySubscription',
+                                                       action: 'updateSubscribeTopic', params: [userid: session.user.id, topicid: topic.id])}">
                                                 Subscribe
                                             </a>
                                         </g:if>
-                                        <g:if test="${subscription && topic.createdBy.id!=session.user.id}">
-                                            <a class="link-opacity-60-hover" href="${createLink(controller: 'modifySubscription',
-                                                    action: 'updateUnsubscribeTopic',params: [userid: session.user.id, topicid: topic.id])}">
+                                        <g:if test="${subscription && topic.createdBy.id != session.user.id}">
+                                            <a class="link-opacity-60-hover"
+                                               href="${createLink(controller: 'modifySubscription',
+                                                       action: 'updateUnsubscribeTopic', params: [userid: session.user.id, topicid: topic.id])}">
                                                 UnSubscribe
                                             </a>
                                         </g:if>
@@ -166,7 +169,6 @@ body {
 
                                 <div class="row">
                                     <div class="col">
-                                        <h6>${topic.name}</h6>
                                     </div>
 
                                     <div class="col">
@@ -274,156 +276,156 @@ body {
             </div>
 
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
+                <div class="row">
+                    <h3>Subscriptions</h3>
+                </div>
+                <hr>
                 <g:each in="${subscriptionData}" var="row">
                     <% def topic = row.topic %>
                     <% def otherSub = row.otherUserSub %>
                     <% def sessionSub = row.sessionUserSub %>
                     <% def activeSubCount = row.activeSubCount %>
                     <% def activePostCount = row.activePostCount %>
+                    <g:if test="${topic.visibility == LinkSharing.Topic.Visibility.PUBLIC ||
+                            session.user.admin || userProfile.id == session.user.id}">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="data:image/jpeg;base64,${topic.createdBy?.photo ? topic.createdBy?.photo.encodeBase64() : ''}"
+                                     alt="User Photo" width="100%" height="auto">
+                            </div>
 
-                    <div class="topic-card">
-                        <h4>${topic.name}</h4>
-                        <p>Created by: ${topic.createdBy.username}</p>
-                        <p>Visibility: ${topic.visibility}</p>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>${topic.name} (${topic.visibility})
+                                        </h5>
+                                    </div>
 
-                        <p>Other user subscribed as: <strong>${otherSub.seriousness}</strong></p>
+                                    <div class="col-3">
+                                        <g:if test="${!sessionSub}">
+                                            <a class="link-opacity-60-hover"
+                                               href="${createLink(controller: 'modifySubscription',
+                                                       action: 'updateSubscribeTopic', params: [userid: session.user.id, topicid: topic.id])}">
+                                                Subscribe
+                                            </a>
+                                        </g:if>
+                                        <g:if test="${sessionSub && topic.createdBy.id != session.user.id}">
+                                            <a class="link-opacity-60-hover"
+                                               href="${createLink(controller: 'modifySubscription',
+                                                       action: 'updateUnsubscribeTopic', params: [userid: session.user.id, topicid: topic.id])}">
+                                                UnSubscribe
+                                            </a>
+                                        </g:if>
+                                    </div>
+                                </div>
 
-                        <p><strong>${activeSubCount}</strong> active subscribers</p>
-                        <p><strong>${activePostCount}</strong> active posts</p>
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>@${topic.createdBy.username}
+                                        </h6>
+                                    </div>
 
-                        <g:if test="${sessionSub}">
-                            <p>You are also <strong>subscribed</strong> to this topic as: <em>${sessionSub.seriousness}</em></p>
-                        </g:if>
-                        <g:else>
-                            <p>You are <strong>not subscribed</strong> to this topic.</p>
-                        </g:else>
-                    </div>
-                    <hr/>
+                                    <div class="col">
+                                        <h6>${activeSubCount} Subscriptions
+                                        </h6>
+                                    </div>
+
+                                    <div class="col">
+                                        <h6>${activePostCount} Posts
+                                        </h6>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <g:if test="${sessionSub}">
+                                            <a class="btn btn-primary dropdown-toggle"
+                                               href="#" role="button"
+                                               data-bs-toggle="dropdown"
+                                               aria-expanded="false">
+                                                ${sessionSub?.seriousness}
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: sessionSub.id, seriousness: 'SERIOUS'])}">SERIOUS</a>
+                                                </li>
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: sessionSub.id, seriousness: 'CASUAL'])}">CASUAL</a>
+                                                </li>
+                                                <li><a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifySubscription', action: 'updateSeriousness',
+                                                               params: [id: sessionSub.id, seriousness: 'VERY_SERIOUS'])}">VERY_SERIOUS</a>
+                                                </li>
+                                            </ul>
+                                        </g:if>
+                                    </div>
+                                    <div class="col">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
+                                                ${topic.visibility}
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: topic.id, visibility: 'PRIVATE'])}">
+                                                        Private
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                       href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: topic.id, visibility: 'PUBLIC'])}">
+                                                        Public
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </g:if>
+                                    </div>
+                                    <div class="col-1">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <g:link controller="modifyTopic" action="updateIsDelete"
+                                                    id="${topic.id}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                                     fill="currentColor"
+                                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                                </svg>
+                                            </g:link>
+                                        </g:if>
+                                    </div>
+                                    <div class="col-1">
+                                        <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                            <a href="#"
+                                               onclick="openEditModal(${topic.id}, '${topic.name?.replaceAll("'", "\\\\'")}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                                     height="auto" fill="currentColor"
+                                                     class="bi bi-pencil-square"
+                                                     viewBox="0 0 16 16">
+                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                    <path fill-rule="evenodd"
+                                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                                </svg>
+                                            </a>
+                                        </g:if>
+                                    </div>
+                                    <div class="col-2">
+                                        <g:if test="${sessionSub}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                                 fill="currentColor"
+                                                 class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                                            </svg>
+                                        </g:if>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </g:if>
                 </g:each>
-            </div>
-            <div class="border rounded border-dark p-2 mb-2 text-bg-light">
-                <div class="row">
-                    <h3>Subscriptions</h3>
-                </div>
-                <hr>
-
-
-                <div class="row">
-                    <div class="col">
-                        <h5>
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Grails</a>
-                        </h5>
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6>Subscriptions</h6>
-                            </div>
-
-                            <div class="col">
-                                <h6>Posts</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Serious
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Serious</a></li>
-                                    <li><a class="dropdown-item" href="#">UnSerious</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6 style="color: blue;">619</h6>
-                            </div>
-
-                            <div class="col">
-                                <h6 style="color: blue;">777</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="row">
-                    <div class="col">
-                        <h5>
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Grails</a>
-                        </h5>
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6>Subscriptions</h6>
-                            </div>
-
-                            <div class="col">
-                                <h6>Posts</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-expanded="false">
-                                    Serious
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Serious</a></li>
-                                    <li><a class="dropdown-item" href="#">UnSerious</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="col">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
-                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h6 style="color: blue;">619</h6>
-                            </div>
-
-                            <div class="col">
-                                <h6 style="color: blue;">777</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -436,9 +438,11 @@ body {
 
                     <div class="col">
                         <div class="input-group">
-                            <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
+                            <button type="button" class="btn btn-outline-primary"
+                                    data-mdb-ripple-init><h5>Search</h5>
                             </button>
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                            <input type="search" class="form-control rounded" placeholder="Search"
+                                   aria-label="Search"
                                    aria-describedby="search-addon"/>
                         </div>
                     </div>
