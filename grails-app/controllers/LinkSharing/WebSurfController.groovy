@@ -9,6 +9,12 @@ class WebSurfController {
         if (!session.user?.admin) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def users = LS_User.createCriteria().list {
+            order("username", "asc")
+        }
+        render(view: 'Admin', model: [
+                users: users
+        ])
     }
     def Dashboard() {
         def sessionUser = session.user

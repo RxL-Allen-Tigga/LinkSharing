@@ -82,34 +82,34 @@ body {
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>mrk_otto_123</td>
-                <td>mark@otto.com</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>Active</td>
-                <td>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                </td>
-                <td>
-                    <button class="remove btn btn-danger">X</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>mrk_otto_123</td>
-                <td>mark@otto.com</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>Deactive</td>
-                <td>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1">
-                </td>
-                <td>
-                    <button class="remove btn btn-danger">X</button>
-                </td>
-            </tr>
+            <g:each in="${users}" var="user">
+                <tr>
+                    <td>${user.id}</td>
+                    <td>@${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>
+                        <g:if test="${user.active}">
+                            Active
+                        </g:if>
+                        <g:else>
+                            Inactive
+                        </g:else>
+                    </td>
+                    <td>
+                        <g:if test="${user.admin}">
+                            Admin
+                        </g:if>
+                        <g:else>
+                            User
+                        </g:else>
+                    </td>
+                    <td>
+                        <button class="remove btn btn-danger">X</button>
+                    </td>
+                </tr>
+            </g:each>
             </tbody>
         </table>
     </div>
