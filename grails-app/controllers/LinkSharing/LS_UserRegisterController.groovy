@@ -162,4 +162,63 @@ class LS_UserRegisterController {
         }
         redirect(controller: "webSurf", action: "EditProfile")
     }
+    def updateToAdmin(Long id) {
+        def user = LS_User.get(id)
+        if (user) {
+            user.admin = true
+            if (user.save(flush: true)) {
+                flash.message = "User has been promoted to Admin."
+            } else {
+                flash.message = "Failed to promote user to Admin."
+            }
+        } else {
+            flash.message = "User not found."
+        }
+        redirect(controller: "webSurf", action: "Admin")
+    }
+
+    // Action to degrade user from admin
+    def degradeFromAdmin(Long id) {
+        def user = LS_User.get(id)
+        if (user) {
+            user.admin = false
+            if (user.save(flush: true)) {
+                flash.message = "User has been degraded to regular user."
+            } else {
+                flash.message = "Failed to degrade user to regular user."
+            }
+        } else {
+            flash.message = "User not found."
+        }
+        redirect(controller: "webSurf", action: "Admin")
+    }
+    def updateToActive(Long id){
+        def user = LS_User.get(id)
+        if (user) {
+            user.isDeleted = false
+            if (user.save(flush: true)) {
+                flash.message = "User has been Activated."
+            } else {
+                flash.message = "Failed to Activate user."
+            }
+        } else {
+            flash.message = "User not found."
+        }
+        redirect(controller: "webSurf", action: "Admin")
+    }
+    def updateToInActive(Long id){
+        def user = LS_User.get(id)
+        if (user) {
+            user.isDeleted = true
+            if (user.save(flush: true)) {
+                flash.message = "User has been InActivated."
+            } else {
+                flash.message = "Failed to InActivate user"
+            }
+        } else {
+            flash.message = "User not found."
+        }
+        redirect(controller: "webSurf", action: "Admin")
+    }
+
 }

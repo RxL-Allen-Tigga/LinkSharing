@@ -122,12 +122,12 @@ body {
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
                             <li>
-                                <a class="dropdown-item" href="/webSurf/Admin">Topics</a>
+                                <a class="dropdown-item" href="/webSurf/AdminTopic">Topics</a>
                             </li>
                         </g:if>
                         <g:if test="${session.user.admin}">
                             <li>
-                                <a class="dropdown-item" href="/webSurf/Admin">Posts</a>
+                                <a class="dropdown-item" href="/webSurf/AdminPost">Posts</a>
                             </li>
                         </g:if>
                         <g:if test="${session.user.admin}">

@@ -9,11 +9,79 @@ class WebSurfController {
         if (!session.user?.admin) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", session.user)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+
+        // Get the sort column and direction from the request, or set default to "username" and "asc"
+        def sortColumn = params.sort ?: "username"
+        def sortDirection = params.order ?: "asc"
         def users = LS_User.createCriteria().list {
-            order("username", "asc")
+            order(sortColumn, sortDirection)
         }
+
         render(view: 'Admin', model: [
-                users: users
+                subscribedTopics: subscribedTopics,
+                users: users,
+                sortColumn: sortColumn,
+                sortDirection: sortDirection
+        ])
+    }
+    def AdminTopic() {
+        if (!session.user?.admin) {
+            redirect(controller: "webSurf", action: "Login")
+            return // Important: prevent further execution after redirect
+        }
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", session.user)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+
+        def sortField = params.sort ?: "id"
+        def sortOrder = params.order ?: "asc"
+        def topics = Topic.createCriteria().list {
+            eq("isDeleted", false)
+            order(sortField, sortOrder)
+        }
+
+        render(view: 'AdminTopic', model: [
+                subscribedTopics: subscribedTopics,
+                topics: topics,
+                sortField: sortField,
+                order: sortOrder
+        ])
+    }
+
+    def AdminPost(){
+        if (!session.user?.admin) {
+            redirect(controller: "webSurf", action: "Login")
+        }
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", session.user)
+            eq("isDeleted",false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+        def sortField = params.sort ?: "id"
+        def sortOrder = params.order ?: "asc"
+        def posts = LS_Resource.createCriteria().list {
+            eq("isDeleted", false)
+            order(sortField, sortOrder)
+        }
+
+        render(view: 'AdminPost', model: [
+                subscribedTopics: subscribedTopics,
+                posts: posts,
+                sortField: sortField,
+                order: sortOrder
         ])
     }
     def Dashboard() {

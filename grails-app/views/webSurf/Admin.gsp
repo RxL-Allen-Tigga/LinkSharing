@@ -46,20 +46,6 @@ body {
             <div class="col-6">
                 <h3>Users Details</h3>
             </div>
-
-            <div class="col">
-                <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false">
-                    All Users
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">All Users</a></li>
-                    <li><a class="dropdown-item" href="#">Active</a></li>
-                    <li><a class="dropdown-item" href="#">Deactive</a></li>
-                </ul>
-            </div>
-
             <div class="col input-group">
                 <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
                 </button>
@@ -71,14 +57,27 @@ body {
         <table class="table table-striped mb-2">
             <thead>
             <tr>
-                <th scope="col" class="sortable">Id</th>
-                <th scope="col" class="sortable">Username</th>
-                <th scope="col" class="sortable">Email</th>
-                <th scope="col" class="sortable">Firstname</th>
-                <th scope="col" class="sortable">Lastname</th>
-                <th scope="col" class="sortable">Status</th>
-                <th scope="col" class="sortable">Admin</th>
-                <th scope="col" class="sortable">Remove</th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'id', order: sortColumn == 'id' && sortDirection == 'asc' ? 'desc' : 'asc']">Id</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'username', order: sortColumn == 'username' && sortDirection == 'asc' ? 'desc' : 'asc']">Username</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'email', order: sortColumn == 'email' && sortDirection == 'asc' ? 'desc' : 'asc']">Email</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'firstName', order: sortColumn == 'firstName' && sortDirection == 'asc' ? 'desc' : 'asc']">Firstname</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'lastName', order: sortColumn == 'lastName' && sortDirection == 'asc' ? 'desc' : 'asc']">Lastname</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'active', order: sortColumn == 'active' && sortDirection == 'asc' ? 'desc' : 'asc']">Status</g:link>
+                </th>
+                <th scope="col" class="sortable">
+                    <g:link action="Admin" params="[sort: 'admin', order: sortColumn == 'admin' && sortDirection == 'asc' ? 'desc' : 'asc']">Admin</g:link>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -90,24 +89,30 @@ body {
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>
                     <td>
-                        <g:if test="${user.active}">
-                            Active
+                        <g:if test="${!user.isDeleted}">
+                            <g:link controller="LS_UserRegister" action="updateToInActive" params="[id: user.id]">
+                                Active
+                            </g:link>
                         </g:if>
                         <g:else>
-                            Inactive
+                            <g:link controller="LS_UserRegister" action="updateToActive" params="[id: user.id]">
+                                Inactive
+                            </g:link>
                         </g:else>
                     </td>
                     <td>
                         <g:if test="${user.admin}">
-                            Admin
+                            <g:link controller="LS_UserRegister" action="degradeFromAdmin" params="[id: user.id]">
+                                Admin
+                            </g:link>
                         </g:if>
                         <g:else>
-                            User
+                            <g:link controller="LS_UserRegister" action="updateToAdmin" params="[id: user.id]">
+                                Non Admin
+                            </g:link>
                         </g:else>
                     </td>
-                    <td>
-                        <button class="remove btn btn-danger">X</button>
-                    </td>
+
                 </tr>
             </g:each>
             </tbody>
