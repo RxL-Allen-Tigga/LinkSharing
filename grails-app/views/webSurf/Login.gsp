@@ -10,35 +10,74 @@
 </head>
 
 <style>
-    body {
-        background-image: url('https://i0.wp.com/www.omgubuntu.co.uk/wp-content/uploads/2022/03/jammy-jellyfish-hero.jpg?fit=1473%2C832&ssl=1'); /* Replace with the URL of your image */
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }
+body {
+    background-image: url('https://i0.wp.com/www.omgubuntu.co.uk/wp-content/uploads/2022/03/jammy-jellyfish-hero.jpg?fit=1473%2C832&ssl=1'); /* Replace with the URL of your image */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
 
-    .sortable {
-        cursor: pointer;
-    }
+.sortable {
+    cursor: pointer;
+}
 
-    .svg-link svg {
-        fill: currentColor; /* The color will follow the anchor's text color */
-        transition: fill 0.3s ease; /* Smooth transition */
-    }
+.svg-link svg {
+    fill: currentColor; /* The color will follow the anchor's text color */
+    transition: fill 0.3s ease; /* Smooth transition */
+}
 
-    /* Change color to dark blue on hover */
-    .svg-link:hover svg {
-        fill: #003366; /* Dark blue color */
-    }
+/* Change color to dark blue on hover */
+.svg-link:hover svg {
+    fill: #003366; /* Dark blue color */
+}
 
-    /* Optional: Add color change for the link itself when hovered */
-    .svg-link:hover {
-        color: #003366; /* Change the text color of the link (optional) */
-    }
+/* Optional: Add color change for the link itself when hovered */
+.svg-link:hover {
+    color: #003366; /* Change the text color of the link (optional) */
+}
 </style>
 
 <body>
-<Header:navbar username="${session.user?.username}"/>
+<script>
+    document.getElementById("formFile").addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const validTypes = ["image/jpeg", "image/png"];
+            if (!validTypes.includes(file.type)) {
+                alert("Only JPG and PNG files are allowed.");
+                this.value = ""; // Clear the input
+            }
+        }
+    });
+</script>
+%{--<Header:navbar username="${session.user?.username}"/>--}%
+<div class="container-fluid sticky-top bg-light shadow">
+    <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
+        <div class="col-4">
+            <!-- Use Grails link for the Dashboard -->
+            <!-- <g:link class="link-opacity-60-hover" controller="webSurf" action="dashboard">
+                <h2>Link Sharing</h2>
+            </g:link> -->
+            <a class="link-opacity-60-hover" href="http://localhost:8080/webSurf/dashboard/"><h2>Link Sharing</h2></a>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                  rel="stylesheet">
+        </div>
+
+        <div class="col">
+            <div class="input-group">
+                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>
+                    <h5>Search</h5>
+                </button>
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                       aria-describedby="search-addon"/>
+            </div>
+        </div>
+        <div class="col-4">
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
 
 <div class="container">
     <div>
@@ -48,6 +87,7 @@
             </div>
         </g:if>
     </div>
+
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
@@ -173,12 +213,14 @@
                     <h3>Login</h3>
                 </div>
                 <br>
+
                 <form id="loginForm" method="POST" enctype="multipart/form-data" action="/LS_UserRegister/login">
                     <div class="form-group ">
                         <label for="exampleInputEmail1">
                             Email address<span style="color: red;">*</span>
                         </label>
-                        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp1"
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                               aria-describedby="emailHelp1"
                                placeholder="Enter email" required>
                     </div>
 
@@ -212,24 +254,27 @@
                 </div>
 
                 <form id="registerForm" method="POST" enctype="multipart/form-data" action="/LS_UserRegister/register">
-%{--                <form id="registerForm" method="POST" enctype="multipart/form-data" action="/TempService/register">--}%
+                    %{--                <form id="registerForm" method="POST" enctype="multipart/form-data" action="/TempService/register">--}%
                     <div class="form-group ">
                         <label for="exampleFirstName">
                             First Name<span style="color: red;">*</span>
                         </label>
-                        <input type="text" name="firstName" class="form-control" id="exampleFirstName" placeholder="First Name" required>
+                        <input type="text" name="firstName" class="form-control" id="exampleFirstName"
+                               placeholder="First Name" required>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleLastName">Last Name</label>
-                        <input type="text" name="lastName" class="form-control" id="exampleLastName" placeholder="Last Name">
+                        <input type="text" name="lastName" class="form-control" id="exampleLastName"
+                               placeholder="Last Name">
                     </div>
 
                     <div class="form-group ">
                         <label for="exampleInputEmail2">
                             Email address<span style="color: red;">*</span>
                         </label>
-                        <input type="email" name="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email" required>
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail2"
+                               placeholder="Enter email" required>
                         <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                     </div>
@@ -238,21 +283,24 @@
                         <label for="exampleUsername">
                             Username<span style="color: red;">*</span>
                         </label>
-                        <input type="text" name="username" class="form-control" id="exampleUsername" placeholder="Username"required>
+                        <input type="text" name="username" class="form-control" id="exampleUsername"
+                               placeholder="Username" required>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputPassword2">
                             Password<span style="color: red;">*</span>
                         </label>
-                        <input type="password" name="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword2"
+                               placeholder="Password" required>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputPassword2">
                             Confirm Password<span style="color: red;">*</span>
                         </label>
-                        <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3" placeholder="Confirm Password" required>
+                        <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3"
+                               placeholder="Confirm Password" required>
                     </div>
 
                     <div class="mb-3">
@@ -273,6 +321,5 @@
 <br>
 <g:render template="/shared/navbarModals"/>
 </body>
-
 
 </html>

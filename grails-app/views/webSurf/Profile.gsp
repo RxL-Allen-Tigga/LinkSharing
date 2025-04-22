@@ -145,8 +145,11 @@ body {
                             <div class="col">
                                 <div class="row">
                                     <div class="col">
-                                        <h5>${topic.name} (${topic.visibility})
-                                        </h5>
+                                        <g:link controller="webSurf" action="Topic"
+                                                params="[id: topic?.id]">
+                                            <h5>${topic.name} (${topic.visibility})
+                                            </h5>
+                                        </g:link>
                                     </div>
 
                                     <div class="col-3">
@@ -297,8 +300,11 @@ body {
                             <div class="col">
                                 <div class="row">
                                     <div class="col">
-                                        <h5>${topic.name} (${topic.visibility})
-                                        </h5>
+                                        <g:link controller="webSurf" action="Topic"
+                                                params="[id: topic?.id]">
+                                            <h5>${topic.name} (${topic.visibility})
+                                            </h5>
+                                        </g:link>
                                     </div>
 
                                     <div class="col-3">
@@ -321,8 +327,11 @@ body {
 
                                 <div class="row">
                                     <div class="col">
-                                        <h6>@${topic.createdBy.username}
-                                        </h6>
+                                        <g:link controller="webSurf" action="Profile"
+                                                params="[id: topic.createdBy?.id]">
+                                            <h6>@${topic.createdBy.username}
+                                            </h6>
+                                        </g:link>
                                     </div>
 
                                     <div class="col">
@@ -362,6 +371,7 @@ body {
                                             </ul>
                                         </g:if>
                                     </div>
+
                                     <div class="col">
                                         <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
                                             <a class="btn btn-primary dropdown-toggle" href="#" role="button"
@@ -384,6 +394,7 @@ body {
                                             </ul>
                                         </g:if>
                                     </div>
+
                                     <div class="col-1">
                                         <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
                                             <g:link controller="modifyTopic" action="updateIsDelete"
@@ -396,6 +407,7 @@ body {
                                             </g:link>
                                         </g:if>
                                     </div>
+
                                     <div class="col-1">
                                         <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
                                             <a href="#"
@@ -411,6 +423,7 @@ body {
                                             </a>
                                         </g:if>
                                     </div>
+
                                     <div class="col-2">
                                         <g:if test="${sessionSub}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"

@@ -280,6 +280,13 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
             return // important to stop further execution
         }
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", session.user)
+            eq("isDeleted",false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
 
         def userTopic = Topic.findByIdAndIsDeleted(id, false)
 
@@ -357,7 +364,8 @@ class WebSurfController {
                 activeSubscriptionCount: activeSubscriptionCount,
                 activeResourceCount    : activeResourceCount,
                 userSubscription       : userSubscription,
-                topicSubscribers: topicSubscribers
+                topicSubscribers: topicSubscribers,
+                subscribedTopics: subscribedTopics
         ])
     }
 }

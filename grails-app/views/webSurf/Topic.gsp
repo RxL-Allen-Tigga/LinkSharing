@@ -72,7 +72,95 @@ body {
         editModal.show();
     }
 </script>
-<Header:navbar username="${session.user?.username}"/>
+<g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>
+%{--<Header:navbar username="${session.user?.username}"/>--}%
+<div class="container-fluid sticky-top bg-light shadow">
+    <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
+        <div class="col-4">
+            <div class="row">
+                <g:link class="link-opacity-60-hover" controller="webSurf" action="dashboard">
+                    <h2>Link Sharing
+                    <g:if test="${session.user.admin}">
+                        (ADMIN)
+                    </g:if>
+                    </h2>
+                </g:link>
+            </div>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                  rel="stylesheet">
+        </div>
+
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>
+                            <h5>Search</h5>
+                        </button>
+                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                               aria-describedby="search-addon"/>
+                    </div>
+                </div>
+
+                <div class="col-1">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#Share_Link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" fill="currentColor"
+                             class="bi bi-link-45deg" viewBox="0 0 16 16">
+                            <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                            <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="col-1">
+                    <a href="#" class="svg-link" data-bs-toggle="modal" data-bs-target="#Share_Document">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
+                             class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="col-2 dropdown">
+                    <!-- User dropdown -->
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" fill="currentColor"
+                             class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                        ${session.username ?: 'user_name'}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/Admin">Topics</a>
+                            </li>
+                        </g:if>
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/Admin">Posts</a>
+                            </li>
+                        </g:if>
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/Admin">Users</a>
+                            </li>
+                        </g:if>
+                        <li>
+                            <a class="dropdown-item" href="/webSurf/EditProfile">Edit Profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/LS_UserRegister/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
 <div class="container">
     <div class="row align-items-start mt-5">
         <div class="col">
@@ -111,7 +199,9 @@ body {
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                <h6>@${userTopic.createdBy.username}</h6>
+                                <g:link controller="webSurf" action="Profile" params="[id: userTopic.createdBy?.id]">
+                                    <h6>@${userTopic.createdBy.username}</h6>
+                                </g:link>
                             </div>
 
                             <div class="col">
@@ -145,21 +235,21 @@ body {
                             </div>
 
                             <div class="col">
-                                <g:if test="${userSubscription?.topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
+                                <g:if test="${userTopic.createdBy?.id == session.user?.id || session?.user?.admin == true}">
                                     <a class="btn btn-primary dropdown-toggle" href="#" role="button"
                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        ${userSubscription?.topic?.visibility ?: 'No visibility'}  <!-- Safe navigation and fallback value -->
+                                        ${userTopic.visibility ?: 'No visibility'}  <!-- Safe navigation and fallback value -->
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a class="dropdown-item"
-                                               href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: userSubscription?.topic?.id, visibility: 'PRIVATE'])}">
+                                               href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: userTopic.id, visibility: 'PRIVATE'])}">
                                                 Private
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item"
-                                               href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: userSubscription?.topic?.id, visibility: 'PUBLIC'])}">
+                                               href="${createLink(controller: 'modifyTopic', action: 'updateVisibility', params: [id: userTopic.id, visibility: 'PUBLIC'])}">
                                                 Public
                                             </a>
                                         </li>
@@ -198,7 +288,7 @@ body {
 
                             <div class="col-2">
                                 <g:if test="${userSubscription}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="auto" fill="currentColor"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
                                          class="bi bi-envelope-fill" viewBox="0 0 16 16">
                                         <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
                                     </svg>
@@ -232,8 +322,11 @@ body {
 
                             <div class="row">
                                 <div class="col">
-                                    <h6>@${entry.user.username}
-                                    </h6>
+                                    <g:link controller="webSurf" action="Profile"
+                                            params="[id: entry.user?.id]">
+                                        <h6>@${entry.user.username}
+                                        </h6>
+                                    </g:link>
                                 </div>
 
                                 <div class="col">
