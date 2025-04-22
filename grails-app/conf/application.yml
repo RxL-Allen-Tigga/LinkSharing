@@ -14,22 +14,19 @@ dataSource:
   dbCreate: update
 #  dbCreate: create-drop
 
-#dataSource:
-#  url: jdbc:oracle:thin@localhost:1521/orclpdb1
-#  driverClassName: oracle.jdbc.OracleDriver
-#  dialect: org.hibernate.dialect.Oracle12cDialect
-#  username: linksharing
-#  password: 'linksharing123'
-#  pooled: true
-#  jmxExport: true
-#  dbCreate: update
-#  dbCreate: create
+document:
+  upload:
+    dir: /home/allentigga/IdeaProjects/LinkSharing/grails-app/assets/ResourcesDocFiles
 hibernate:
   cache:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
 grails:
+  controllers:
+    upload:
+      maxFileSize: 50MB
+      maxRequestSize: 50MB
   grails:
     profile: web
     codegen:

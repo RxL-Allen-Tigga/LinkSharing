@@ -162,8 +162,6 @@ class WebSurfController {
 //        Trending Topics
 
         def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(sessionUser)
-
-
         render(view: 'Dashboard', model: [
                 subscribedTopics: subscribedTopics,
 

@@ -76,49 +76,38 @@ class TopicMiscellaneousService {
             return [success: false, message: "Error sharing link: ${e.message}"]
         }
     }
+    def grailsApplication
+
     def createDocumentResource(MultipartFile file, String description, Long topicId, LS_User user) {
-        if (!file || file.empty || !description || !topicId || !user) {
-            return [success: false, message: "All fields are required."]
-        }
-
-        def topic = Topic.get(topicId)
+        Topic topic = Topic.get(topicId)
         if (!topic) {
-            return [success: false, message: "Topic not found."]
+            return [success: false, message: "Invalid topic."]
         }
 
-        try {
-            // Save the file to disk or any directory
-            String uploadDir = "/path/to/store/documents"  // replace with real path
-            new File(uploadDir).mkdirs()
-            String uniqueFileName = "${System.currentTimeMillis()}_${file.originalFilename}"
-            String filePath = "${uploadDir}/${uniqueFileName}"
-            file.transferTo(new File(filePath))
+        // Get the custom upload directory (you can use absolute path as you specified)
+        String uploadDir = '/home/allentigga/IdeaProjects/LinkSharing/grails-app/assets/ResourcesDocFiles'
 
-            def resource = new DocumentResource(
-                    filePath: filePath,
-                    description: description,
-                    topic: topic,
-                    createdBy: user
-            )
+        // Ensure the directory exists
+        new File(uploadDir).mkdirs()
 
-            if (!resource.validate()) {
-                return [success: false, message: "Resource validation failed: ${resource.errors}"]
-            }
+        // Generate a unique filename
+        String fileName = "${UUID.randomUUID()}_${file.originalFilename}"
+        String filePath = "${uploadDir}/${fileName}"
 
-            resource.save(flush: true)
+        // Save file to the directory
+        File dest = new File(filePath)
+        file.transferTo(dest)
 
-            // Add reading item for the uploader
-            new ReadingItem(user: user, resource: resource, isRead: false).save(flush: true)
+        // Save DocumentResource with relative path in DB
+        String relativeFilePath = "assets/ResourcesDocFiles/${fileName}"  // Store the relative path
+        DocumentResource resource = new DocumentResource(
+                description: description,
+                createdBy: user,
+                topic: topic,
+                filePath: relativeFilePath
+        )
+        resource.save(flush: true, failOnError: true)
 
-            // Add reading items for other subscribers
-            def otherSubscribers = Subscription.findAllByTopic(topic).findAll { it.user.id != user.id }*.user
-            otherSubscribers.each { subscribedUser ->
-                new ReadingItem(user: subscribedUser, resource: resource, isRead: false).save(flush: true)
-            }
-
-            return [success: true, message: "Document shared successfully in topic '${topic.name}'."]
-        } catch (Exception e) {
-            return [success: false, message: "Error sharing document: ${e.message}"]
-        }
+        return [success: true, message: "Document shared successfully."]
     }
 }

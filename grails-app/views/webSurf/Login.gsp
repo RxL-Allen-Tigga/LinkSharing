@@ -307,7 +307,7 @@ body {
                         <label for="formFile" class="form-label">
                             Photo<span style="color: red;">*</span>
                         </label>
-                        <input class="form-control" type="file" name="photo" id="formFile" required>
+                        <input class="form-control" type="file" name="photo" id="formFile" accept=".png, .jpg, .jpeg" required>
                     </div>
 
                     <br>

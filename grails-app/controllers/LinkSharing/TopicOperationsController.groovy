@@ -1,6 +1,7 @@
 package LinkSharing
 
 import grails.gorm.transactions.Transactional
+import org.springframework.web.multipart.MultipartFile
 
 @Transactional
 class TopicOperationsController {
@@ -38,6 +39,22 @@ class TopicOperationsController {
 
         redirect(controller: "webSurf", action: "Dashboard")
     }
+//    def shareDocument() {
+//        def user = session.user
+//        if (!user) {
+//            flash.message = "Please log in to share a document."
+//            redirect(controller: "webSurf", action: "Login")
+//            return
+//        }
+//
+//        def file = request.getFile('documentFile')
+//        String description = params.description
+//        Long topicId = params.long('topicId')
+//
+//        def result = topicMiscellaneousService.createDocumentResource(file, description, topicId, user)
+//        flash.message = result.message
+//        redirect(controller: "webSurf", action: "Dashboard")
+//    }
     def shareDocument() {
         def user = session.user
         if (!user) {
@@ -49,6 +66,17 @@ class TopicOperationsController {
         def file = request.getFile('documentFile')
         String description = params.description
         Long topicId = params.long('topicId')
+
+        // Validate file extension
+        def allowedExtensions = ['pdf', 'doc', 'docx']
+        String originalFilename = file.originalFilename
+        String extension = originalFilename?.split('\\.')?.last()?.toLowerCase()
+
+        if (!file || !allowedExtensions.contains(extension)) {
+            flash.message = "Only PDF, DOC, and DOCX files are allowed."
+            redirect(controller: "webSurf", action: "Dashboard")
+            return
+        }
 
         def result = topicMiscellaneousService.createDocumentResource(file, description, topicId, user)
         flash.message = result.message

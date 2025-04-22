@@ -109,7 +109,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Document</label>
-                        <input class="form-control" type="file" id="formFile" name="documentFile" required>
+                        <input class="form-control" type="file" id="formFile" name="documentFile" accept=".pdf,.doc,.docx" required>
                     </div>
 
                     <div class="modal-form-group">
