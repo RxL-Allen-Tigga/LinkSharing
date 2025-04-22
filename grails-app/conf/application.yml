@@ -22,17 +22,23 @@ hibernate:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 grails:
+  web:
+    disableMultipart: false
+#    multipart:
+#      maxFileSize: 10MB        # Set this to a suitable limit (e.g., 10MB)
+#      maxRequestSize: 10MB
   controllers:
     upload:
       maxFileSize: 50MB
       maxRequestSize: 50MB
-  grails:
-    profile: web
-    codegen:
-      defaultPackage: linksharing
-    gsp:
-      enable: true
   plugin:
     console:
       enabled: true

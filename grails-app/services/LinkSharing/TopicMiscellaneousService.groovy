@@ -106,8 +106,29 @@ class TopicMiscellaneousService {
                 topic: topic,
                 filePath: relativeFilePath
         )
-        resource.save(flush: true, failOnError: true)
+        try {
+            resource.save(flush: true, failOnError: true)
 
-        return [success: true, message: "Document shared successfully."]
+            // Add ReadingItem for creator
+            new ReadingItem(
+                    user: user,
+                    resource: resource,
+                    isRead: false
+            ).save(flush: true)
+
+            // Add ReadingItems for other subscribers
+            def otherSubscribers = Subscription.findAllByTopic(topic).findAll { it.user.id != user.id }*.user
+            otherSubscribers.each { subscribedUser ->
+                new ReadingItem(
+                        user: subscribedUser,
+                        resource: resource,
+                        isRead: false
+                ).save(flush: true)
+            }
+
+            return [success: true, message: "Document shared successfully."]
+        } catch (Exception e) {
+            return [success: false, message: "Error sharing document: ${e.message}"]
+        }
     }
 }

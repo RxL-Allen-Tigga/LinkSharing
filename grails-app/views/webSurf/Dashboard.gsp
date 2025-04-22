@@ -1030,39 +1030,35 @@ body {
                             </div>
 
                             <div class="row">
-
                                 <div class="col">
-                                    %{--                                    <g:if test="${totalunread.resource instanceof LinkResource && totalunread.resource.url != null}">--}%
-                                    <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                        Download</a>
-                                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                          rel="stylesheet">
-                                    %{--                                    </g:if>--}%
+                                    <g:if test="${totalunread.resource instanceof LinkSharing.DocumentResource}">
+                                        <a href="${createLink(controller: 'modifyReadingItem', action: 'download', params: [filename: (totalunread.resource as LinkSharing.DocumentResource).filePath.tokenize('/')[-1]])}">
+                                            Download
+                                        </a>
+                                    </g:if>
                                 </div>
 
                                 <div class="col">
-                                    %{--                    <g:if test="${totalunread.resource.url !== null}">--}%
-                                    <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                        View full site</a>
-                                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                          rel="stylesheet">
-                                    %{--                        <g:if test="${totalunread.resource.filepath !== null}">--}%
+                                    <g:if test="${totalunread.resource instanceof LinkSharing.LinkResource}">
+                                        <a href="${(totalunread.resource as LinkSharing.LinkResource).url}"
+                                           target="_blank">
+                                            View Full Site
+                                        </a>
+                                    </g:if>
                                 </div>
 
                                 <div class="col">
                                     <g:link controller="modifyReadingItem" action="updateIsDelete"
                                             id="${totalunread.id}">
-                                    %{--                                        <a class="link-opacity-60-hover">--}%
                                         Mark as read
-                                    %{--                                        </a>--}%
                                     </g:link>
                                 </div>
 
                                 <div class="col">
-                                    <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                        View post</a>
-                                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                          rel="stylesheet">
+                                    <g:link controller="webSurf" action="Post"
+                                            params="[id: totalunread.resource.id]">
+                                        View post
+                                    </g:link>
                                 </div>
                             </div>
                         </div>

@@ -31,5 +31,15 @@ class ModifyReadingItemController {
         // Redirect back to the referring page
         redirect(uri: request.getHeader("referer") ?: "/")
     }
-
+    def download(String filename) {
+        def file = new File("/home/allentigga/IdeaProjects/LinkSharing/grails-app/assets/ResourcesDocFiles/${filename}")
+        if (file.exists()) {
+            response.setContentType("application/pdf")
+            response.setHeader("Content-Disposition", "attachment; filename=${filename}")
+            response.outputStream << file.bytes
+            response.outputStream.flush()
+        } else {
+            render "File not found."
+        }
+    }
 }

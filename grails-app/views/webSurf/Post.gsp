@@ -44,26 +44,39 @@ body {
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row ">
-                    <div class="col-2">
-                        <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
+                    <h3>Post</h3>
+                </div>
+                <hr>
+
+                <div class="row ">
+                    <div class="col-3">
+                        <img src="data:image/jpeg;base64,${resource.createdBy?.photo?.encodeBase64()?.toString()}"
+                             alt="Profile Image" width="100%" height="auto">
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
-                                <h5>Uday Pratp Singh</h5>
+                                <h5>${resource.createdBy.firstName} ${resource.createdBy.lastName}</h5>
                             </div>
+
                             <div class="col-2">
-                                <a class="link-opacity-60-hover" href="https://www.google.com/"><h5>Grails</h5></a>
+                                <g:link controller="webSurf" action="Topic" params="[id: resource.topic?.id]">
+                                    <h5>${resource.topic.name}</h5>
+                                </g:link>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
-                                <h6>@user_name</h6>
+                                <h6>@${resource.createdBy.username}</h6>
                             </div>
+
                             <div class="col-3">
-                                <h6>created_date</h6>
+                                <h6>created on : ${resource.dateCreated}</h6>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <link rel="stylesheet"
@@ -74,51 +87,69 @@ body {
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
                             </div>
+
                             <div class="col">
                                 <h6>3.5</h6>
                             </div>
+
                             <div class="col-6">
                             </div>
                         </div>
 
                     </div>
                 </div>
+                <br>
+
                 <div class="row">
-                    <p>To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.</p>
+                    <p>${resource.description}</p>
                 </div>
+
                 <div class="row">
                     <div class="col">
-                        <a class="link-opacity-60-hover" href="https://www.google.com/">
-                            Delete</a>
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                              rel="stylesheet">
+                        <g:if test="${resource instanceof LinkSharing.DocumentResource}">
+                            <a href="${createLink(controller: 'modifyReadingItem', action: 'download',
+                                    params: [filename: (resource as LinkSharing.DocumentResource).filePath.tokenize('/')[-1]])}">
+                                Download
+                            </a>
+                        </g:if>
                     </div>
+
                     <div class="col">
-                        <a class="link-opacity-60-hover" href="https://www.google.com/">
-                            Edit</a>
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                              rel="stylesheet">
+                        <g:if test="${resource instanceof LinkSharing.LinkResource}">
+                            <a href="${(resource as LinkSharing.LinkResource).url}"
+                               target="_blank">
+                                View Full Site
+                            </a>
+                        </g:if>
                     </div>
-                    <div class="col">
-                        <a class="link-opacity-60-hover" href="https://www.google.com/">
-                            Download</a>
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                              rel="stylesheet">
+
+                    <div class="col-1">
+                        <g:if test="${resource.createdBy.id == session.user.id || session?.user?.admin == true}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                 fill="currentColor"
+                                 class="bi bi-trash3" viewBox="0 0 16 16">
+                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                            </svg>
+                        </g:if>
                     </div>
-                    <div class="col">
-                        <a class="link-opacity-60-hover" href="https://www.google.com/">
-                            View full site</a>
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                              rel="stylesheet">
+
+                    <div class="col-2">
+                        <g:if test="${resource.createdBy.id == session.user.id || session?.user?.admin == true}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25"
+                                     height="auto" fill="currentColor"
+                                     class="bi bi-pencil-square"
+                                     viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd"
+                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                        </g:if>
                     </div>
                 </div>
+                <br>
             </div>
         </div>
+
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
                 <div class="row">
@@ -127,16 +158,19 @@ body {
                     </div>
                 </div>
                 <br>
+
                 <div class="row">
                     <div class="col-2">
                         <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h5>Uday Pratap Singh
                                 </h5>
                             </div>
+
                             <div class="col-4">
                                 <h5>
                                     <a class="link-opacity-60-hover" href="https://www.google.com/">
@@ -144,17 +178,21 @@ body {
                                 </h5>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <h6>@user_name</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Subscriptions</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Posts</h6>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <h5>
@@ -162,9 +200,11 @@ body {
                                         Subscribe</a>
                                 </h5>
                             </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">619</h6>
                             </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">777</h6>
                             </div>
@@ -172,16 +212,19 @@ body {
                     </div>
                 </div>
                 <hr>
+
                 <div class="row">
                     <div class="col-2">
                         <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
                     </div>
+
                     <div class="col">
                         <div class="row">
                             <div class="col">
                                 <h5>Uday Pratap Singh
                                 </h5>
                             </div>
+
                             <div class="col-4">
                                 <h5>
                                     <a class="link-opacity-60-hover" href="https://www.google.com/">
@@ -189,17 +232,21 @@ body {
                                 </h5>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <h6>@user_name</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Subscriptions</h6>
                             </div>
+
                             <div class="col">
                                 <h6>Posts</h6>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <a class="btn btn-primary dropdown-toggle" href="#" role="button"
@@ -212,17 +259,21 @@ body {
                                     <li><a class="dropdown-item" href="#">UnSerious</a></li>
                                 </ul>
                             </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">619</h6>
                             </div>
+
                             <div class="col">
                                 <h6 style="color: blue;">777</h6>
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col">
                         </div>
+
                         <div class="col-2">
                             <a class="btn btn-primary dropdown-toggle" href="#" role="button"
                                data-bs-toggle="dropdown"
@@ -234,12 +285,14 @@ body {
                                 <li><a class="dropdown-item" href="#">Public</a></li>
                             </ul>
                         </div>
+
                         <div class="col-1">
                             <h5>
                                 <a class="link-opacity-60-hover" href="https://www.google.com/">
                                     Edit</a>
                             </h5>
                         </div>
+
                         <div class="col-2">
                             <h5>
                                 <a class="link-opacity-60-hover" href="https://www.google.com/">

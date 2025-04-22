@@ -234,10 +234,14 @@ class WebSurfController {
 //                trendingtopicDataList: trendingtopicDataList
 //        ])
     }
-    def Post() {
+    def Post(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def resource = LS_Resource.findByIdAndIsDeleted(id, false)
+        render(view: 'Post',model: [
+                resource: resource
+        ])
     }
     def Profile(Long id) {
         if (!session.user) {
