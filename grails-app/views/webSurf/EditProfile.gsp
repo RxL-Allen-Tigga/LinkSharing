@@ -38,6 +38,73 @@ body {
 </style>
 
 <body>
+<div class="container-fluid sticky-top bg-light shadow">
+    <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
+        <div class="col-4">
+            <div class="row">
+                <g:link class="link-opacity-60-hover" controller="webSurf" action="dashboard">
+                    <h2>Link Sharing
+                    <g:if test="${session.user.admin}">
+                        (ADMIN)
+                    </g:if>
+                    </h2>
+                </g:link>
+            </div>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                  rel="stylesheet">
+        </div>
+
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>
+                            <h5>Search</h5>
+                        </button>
+                        <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                               aria-describedby="search-addon"/>
+                    </div>
+                </div>
+
+                <div class="col-2 dropdown">
+                    <!-- User dropdown -->
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" fill="currentColor"
+                             class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                        ${session.user.username ?: 'user_name'}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/AdminTopic">Topics</a>
+                            </li>
+                        </g:if>
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/AdminPost">Posts</a>
+                            </li>
+                        </g:if>
+                        <g:if test="${session.user.admin}">
+                            <li>
+                                <a class="dropdown-item" href="/webSurf/Admin">Users</a>
+                            </li>
+                        </g:if>
+                        <li>
+                            <a class="dropdown-item" href="/webSurf/EditProfile">Edit Profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/LS_UserRegister/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 <form action="${createLink(controller: 'topicOperations', action: 'editTopic')}" method="POST">
     <div class="modal fade" id="Edit_Topic" tabindex="-1">
         <div class="modal-dialog">
@@ -121,7 +188,6 @@ body {
         </div>
     </div>
 </div>
-<Header:navbar username="${session.user?.username}"/>
 <div class="container">
     <div>
         <g:if test="${flash.message}">

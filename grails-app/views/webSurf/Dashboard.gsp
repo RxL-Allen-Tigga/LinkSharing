@@ -117,7 +117,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.username ?: 'user_name'}
+                        ${session.user.username ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
