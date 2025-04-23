@@ -229,7 +229,6 @@ body {
 %{--<g:render template="/templates/shareLinkModal" model="[subscribedTopics: subscribedTopics]" />--}%
 <g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>
 
-
 <div class="container">
     <div>
         <g:if test="${flash.message}">

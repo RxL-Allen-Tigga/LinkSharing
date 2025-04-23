@@ -239,8 +239,18 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
         }
         def resource = LS_Resource.findByIdAndIsDeleted(id, false)
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", session.user)
+            eq("isDeleted",false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(session.user)
         render(view: 'Post',model: [
-                resource: resource
+                resource: resource,
+                subscribedTopics: subscribedTopics,
+                trendingtopicDataList: trendingtopicDataList
         ])
     }
     def Profile(Long id) {
@@ -328,6 +338,11 @@ class WebSurfController {
                     activePostCount : activePostCount
             ]
         }
+        def resources = LS_Resource.createCriteria().list {
+            eq("createdBy.id", userProfile.id)
+            eq("isDeleted", false)
+            order("dateCreated", "desc")
+        }
 
         render(view: 'Profile',model: [
                 id: id,
@@ -337,7 +352,9 @@ class WebSurfController {
 //                Topics
                 userCreatedTopics: userCreatedTopics,
 //                Subscriptions
-                subscriptionData: subscriptionData
+                subscriptionData: subscriptionData,
+//                Resource
+                resources: resources
         ])
     }
     def Search() {
@@ -359,6 +376,11 @@ class WebSurfController {
         }*.topic
 
         def userTopic = Topic.findByIdAndIsDeleted(id, false)
+        def resources = LS_Resource.createCriteria().list {
+            eq("topic.id", userTopic.id)
+            eq("isDeleted", false)
+            order("dateCreated", "desc")
+        }
 
         def activeSubscriptionCount = Subscription.createCriteria().get {
             eq("topic", userTopic)
@@ -435,7 +457,8 @@ class WebSurfController {
                 activeResourceCount    : activeResourceCount,
                 userSubscription       : userSubscription,
                 topicSubscribers: topicSubscribers,
-                subscribedTopics: subscribedTopics
+                subscribedTopics: subscribedTopics,
+                resources: resources
         ])
     }
 }

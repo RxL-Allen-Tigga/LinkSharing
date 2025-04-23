@@ -349,7 +349,7 @@ body {
         <div class="col border rounded border-dark p-2 mb-2 text-bg-light">
             <div class="row">
                 <div class="col">
-                    <h3>Posts: "Grails"</h3>
+                    <h3>Posts</h3>
                 </div>
 
                 <div class="col">
@@ -361,94 +361,56 @@ body {
                     </div>
                 </div>
             </div>
-            <br>
-
-            <div class="row">
-                <div class="col-2">
-                    <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                </div>
-
-                <div class="col">
-                    <div class="row">
-                        <p>To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.</p>
-                    </div>
-
-                    <div class="row">
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Download</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View full site</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Mark as read</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View post</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-                    </div>
-                </div>
-            </div>
             <hr>
-
-            <div class="row">
-                <div class="col-2">
-                    <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                </div>
-
-                <div class="col">
-                    <div class="row">
-                        <p>To dread o'er bear the pative shocks their currenter regards of
-                        ressor's deat with.</p>
+            <g:each in="${resources}" var="resource">
+                <div class="row">
+                    <div class="col-3">
+                        <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
+                             alt="User Photo" width="100%" height="auto">
                     </div>
 
-                    <div class="row">
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Download</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
+                    <div class="col">
+                        <div class="row">
+                            <g:link controller="webSurf" action="Profile"
+                                    params="[id: resource.createdBy?.id]">
+                                <h6>@${resource.createdBy.username}</h6>
+                            </g:link>
                         </div>
-
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View full site</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
+                        <br>
+                        <div class="row">
+                            ${resource.description}
                         </div>
+                        <br>
+                        <div class="row">
+                            <div class="row">
+                                <div class="col">
+                                    <g:if test="${resource instanceof LinkSharing.DocumentResource}">
+                                        <a href="${createLink(controller: 'modifyReadingItem', action: 'download', params: [filename: (resource as LinkSharing.DocumentResource).filePath.tokenize('/')[-1]])}">
+                                            Download
+                                        </a>
+                                    </g:if>
+                                </div>
 
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                Mark as read</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-
-                        <div class="col">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View post</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
+                                <div class="col">
+                                    <g:if test="${resource instanceof LinkSharing.LinkResource}">
+                                        <a href="${(resource as LinkSharing.LinkResource).url}"
+                                           target="_blank">
+                                            View Full Site
+                                        </a>
+                                    </g:if>
+                                </div>
+                                <div class="col">
+                                    <g:link controller="webSurf" action="Post"
+                                            params="[id: resource.id]">
+                                        View post
+                                    </g:link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <hr>
+            </g:each>
         </div>
     </div>
 </div>
