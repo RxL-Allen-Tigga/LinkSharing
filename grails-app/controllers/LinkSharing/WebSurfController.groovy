@@ -102,8 +102,9 @@ class WebSurfController {
 //        Top 5 subscription
         def pageSize = 5
 
-        def page = params.int('page') ?: 1
-        def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
+//        def page = params.int('page') ?: 1
+//        def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
+        def subscriptions = Subscription.createCriteria().list() {
             eq('user', sessionUser)
             eq("isDeleted",false)
             order('dateCreated', 'desc')
@@ -111,12 +112,13 @@ class WebSurfController {
                 eq("isDeleted", false)
             }
         }
-        def totalSubscriptions = subscriptions.totalCount
-        def totalPages = Math.ceil(totalSubscriptions / pageSize)
+//        def totalSubscriptions = subscriptions.totalCount
+//        def totalPages = Math.ceil(totalSubscriptions / pageSize)
 
         //Your Inbox
-        def UnreadItemPage = params.int('page') ?: 1
-        def totalUnread = ReadingItem.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
+//        def UnreadItemPage = params.int('page') ?: 1
+//        def totalUnread = ReadingItem.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
+        def totalUnread = ReadingItem.createCriteria().list() {
             eq('user', sessionUser)
             eq('isRead', false)
             eq('isDeleted', false)
@@ -128,7 +130,7 @@ class WebSurfController {
                 }
             }
         }
-        def totalUnreadItemPage = Math.ceil(totalUnread.totalCount / pageSize)
+//        def totalUnreadItemPage = Math.ceil(totalUnread.totalCount / pageSize)
 //        println(totalUnreadItemPage)
 //        totalUnread.each { item ->
 //            println "Topic: ${item.resource?.topic?.name}"
@@ -165,12 +167,12 @@ class WebSurfController {
         render(view: 'Dashboard', model: [
                 subscribedTopics: subscribedTopics,
 
-                totalPages: totalPages,
-                currentPage: page,
+//                totalPages: totalPages,
+//                currentPage: page,
                 subscriptions: subscriptions,
 
-                totalUnreadItemPage: totalUnreadItemPage,
-                UnreadItemPage: UnreadItemPage,
+//                totalUnreadItemPage: totalUnreadItemPage,
+//                UnreadItemPage: UnreadItemPage,
                 totalUnread: totalUnread,
 
 //                totalSubscriptionCount:totalSubscriptionCount,

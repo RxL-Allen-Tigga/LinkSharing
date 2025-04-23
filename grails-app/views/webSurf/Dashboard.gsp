@@ -622,19 +622,19 @@ body {
                 </g:each>
 
             <!-- Pagination Controls -->
-                <div class="pagination row">
-                    <div class="col-10">
-                        <g:if test="${currentPage > 1}">
-                            <a href="?page=${currentPage - 1}" class="btn btn-primary">Previous</a>
-                        </g:if>
-                    </div>
+%{--                <div class="pagination row">--}%
+%{--                    <div class="col-10">--}%
+%{--                        <g:if test="${currentPage > 1}">--}%
+%{--                            <a href="?page=${currentPage - 1}" class="btn btn-primary">Previous</a>--}%
+%{--                        </g:if>--}%
+%{--                    </div>--}%
 
-                    <div class="col">
-                        <g:if test="${currentPage < totalPages}">
-                            <a href="?page=${currentPage + 1}" class="btn btn-primary">Next</a>
-                        </g:if>
-                    </div>
-                </div>
+%{--                    <div class="col">--}%
+%{--                        <g:if test="${currentPage < totalPages}">--}%
+%{--                            <a href="?page=${currentPage + 1}" class="btn btn-primary">Next</a>--}%
+%{--                        </g:if>--}%
+%{--                    </div>--}%
+%{--                </div>--}%
             </div>
             <script>
                 function openEditModal(topicId, topicName) {
@@ -1064,19 +1064,19 @@ body {
                     </div>
                     <hr>
                 </g:each>
-                <div class="pagination row mt-3">
-                    <div class="col-10">
-                        <g:if test="${UnreadItemPage > 1}">
-                            <a href="?page=${UnreadItemPage - 1}" class="btn btn-primary">Previous</a>
-                        </g:if>
-                    </div>
+%{--                <div class="pagination row mt-3">--}%
+%{--                    <div class="col-10">--}%
+%{--                        <g:if test="${UnreadItemPage > 1}">--}%
+%{--                            <a href="?page=${UnreadItemPage - 1}" class="btn btn-primary">Previous</a>--}%
+%{--                        </g:if>--}%
+%{--                    </div>--}%
 
-                    <div class="col">
-                        <g:if test="${UnreadItemPage < totalUnreadItemPage}">
-                            <a href="?page=${UnreadItemPage + 1}" class="btn btn-primary">Next</a>
-                        </g:if>
-                    </div>
-                </div>
+%{--                    <div class="col">--}%
+%{--                        <g:if test="${UnreadItemPage < totalUnreadItemPage}">--}%
+%{--                            <a href="?page=${UnreadItemPage + 1}" class="btn btn-primary">Next</a>--}%
+%{--                        </g:if>--}%
+%{--                    </div>--}%
+%{--                </div>--}%
             </div>
             <!-- Pagination Controls for Inbox -->
 
