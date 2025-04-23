@@ -8,7 +8,7 @@ class UrlMappings {
 //            }
         }
 
-        "/"(view:"/webSurf/Login")
+        "/"(controller: "webSurf", action: "Login")
         "500"(view:'/error')
         "404"(view:'/notFound')
 

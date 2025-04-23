@@ -151,7 +151,13 @@ body {
 </div>
 
 <div class="container">
-
+    <div>
+        <g:if test="${flash.message}">
+            <div class="alert alert-warning" role="alert">
+                ${flash.message}
+            </div>
+        </g:if>
+    </div>
     <div class="row align-items-start text-bg-light p-2 rounded-2 border border-dark p-2 mb-2">
         <div class="row">
             <div class="col-6">

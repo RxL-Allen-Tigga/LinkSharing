@@ -197,6 +197,13 @@ body {
 </div>
 
 <div class="container">
+    <div>
+        <g:if test="${flash.message}">
+            <div class="alert alert-warning" role="alert">
+                ${flash.message}
+            </div>
+        </g:if>
+    </div>
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
@@ -216,7 +223,7 @@ body {
                             <div class="col">
                                 <h5>${resource.createdBy.firstName} ${resource.createdBy.lastName}</h5>
                             </div>
-                            <div class="col-2">
+                            <div class="col-5">
                                 <g:link controller="webSurf" action="Topic" params="[id: resource.topic?.id]">
                                     <h5>${resource.topic.name}</h5>
                                 </g:link>

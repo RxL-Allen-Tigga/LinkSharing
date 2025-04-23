@@ -37,11 +37,11 @@ grails:
 #    multipart:
 #      maxFileSize: 10MB        # Set this to a suitable limit (e.g., 10MB)
 #      maxRequestSize: 10MB
-  grails:
-    controllers:
-      upload:
-        maxFileSize: 100000000
-        maxRequestSize: 100000000
+  controllers:
+    upload:
+      maxFileSize: 100000000
+      maxRequestSize: 100000000
+
   plugin:
     console:
       enabled: true

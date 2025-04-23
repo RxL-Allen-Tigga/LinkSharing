@@ -20,8 +20,9 @@ class TopicOperationsController {
 
         def result = topicMiscellaneousService.createTopic(name, visibilityParam, user)
         flash.message = result.message
+        redirect(uri: request.getHeader("referer") ?: "/")
 
-        redirect(controller: "webSurf", action: "Dashboard")
+//        redirect(controller: "webSurf", action: "Dashboard")
     }
     def shareLink(){
         def user = session.user
@@ -38,7 +39,8 @@ class TopicOperationsController {
         def result = topicMiscellaneousService.createLinkResource(link, description, topicId, user)
         flash.message = result.message
 
-        redirect(controller: "webSurf", action: "Dashboard")
+//        redirect(controller: "webSurf", action: "Dashboard")
+        redirect(uri: request.getHeader("referer") ?: "/")
     }
 //    def shareDocument() {
 //        def user = session.user
@@ -82,7 +84,9 @@ class TopicOperationsController {
 
             def result = topicMiscellaneousService.createDocumentResource(file, description, topicId, user)
             flash.message = result.message
-            redirect(controller: "webSurf", action: "Dashboard")
+//            redirect(controller: "webSurf", action: "Dashboard")
+            redirect(uri: request.getHeader("referer") ?: "/")
+
         } catch (MaxUploadSizeExceededException e) {
             flash.message = "The file size exceeds the allowed limit."
             redirect(controller: "webSurf", action: "Dashboard")
@@ -127,6 +131,8 @@ class TopicOperationsController {
                 flash.message = "Failed to update topic. ${topic.errors?.allErrors}"
             }
         }
-        redirect(controller: 'webSurf', action: 'Dashboard')
+        redirect(uri: request.getHeader("referer") ?: "/")
+
+//        redirect(controller: 'webSurf', action: 'Dashboard')
     }
 }
