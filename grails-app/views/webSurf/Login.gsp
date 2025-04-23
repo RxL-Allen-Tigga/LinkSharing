@@ -89,6 +89,7 @@ body {
                             <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
                                  alt="User Photo" width="100%" height="auto">
                         </div>
+
                         <div class="col">
                             <div class="row">
                                 <div class="row">
@@ -100,10 +101,12 @@ body {
                                         <h6>@${resource.createdBy.username}</h6>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <p>${resource.description}</p>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col">
                                     <g:if test="${resource instanceof LinkSharing.DocumentResource}">
@@ -135,45 +138,54 @@ body {
                     <div class="col">
                         <h3>Top Trending Posts</h3>
                     </div>
+                    <hr>
+                    <g:each in="${topResourcesWithAvg}" var="item">
+                        <div class="col-3">
+                            <img src="data:image/jpeg;base64,${item.resource?.createdBy?.photo ? item.resource?.createdBy?.photo.encodeBase64() : ''}"
+                                 alt="User Photo" width="100%" height="auto">
+                        </div>
 
-                    <div class="col-1">
-                        <h6 style="color: blue;">sort:</h6>
-                    </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>${item.resource.topic.name}</h6>
+                                    </div>
 
-                    <div class="col-3">
-                        <input type="date" id="datePicker" name="date">
-                    </div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-2">
-                        <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h5>Uday Pratp Singh</h5>
+                                    <div class="col">
+                                        <h6>@${item.resource.createdBy.username}</h6>
+                                    </div>
+                                    <div class="col">
+                                        Avg Rating: ${item.average ? String.format('%.2f', item.average) : '0.00'}
+                                    </div>
+                                </div>
                             </div>
+                            <br>
+                            <div class="row">
+                                <p>${item.resource.description}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <g:if test="${item.resource instanceof LinkSharing.DocumentResource}">
+                                        <a href="${createLink(controller: 'modifyReadingItem', action: 'download', params: [filename: (item.resource as LinkSharing.DocumentResource).filePath.tokenize('/')[-1]])}">
+                                            Download
+                                        </a>
+                                    </g:if>
+                                </div>
 
-                            <div class="col-2">
-                                <a class="link-opacity-60-hover" href="https://www.google.com/"><h5>Grails</h5></a>
+                                <div class="col">
+                                    <g:if test="${item.resource instanceof LinkSharing.LinkResource}">
+                                        <a href="${(item.resource as LinkSharing.LinkResource).url}"
+                                           target="_blank">
+                                            View Full Site
+                                        </a>
+                                    </g:if>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <p>To dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.</p>
-                        </div>
-
-                        <div class="row">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View post</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-                    </div>
+                        <br>
+                        <hr>
+                    </g:each>
                 </div>
             </div>
         </div>
