@@ -62,18 +62,6 @@ body {
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                   rel="stylesheet">
         </div>
-
-        <div class="col">
-            <div class="input-group">
-                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>
-                    <h5>Search</h5>
-                </button>
-                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                       aria-describedby="search-addon"/>
-            </div>
-        </div>
-        <div class="col-4">
-        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
@@ -91,71 +79,54 @@ body {
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
-                <div class="row">
-                    <h3>Recent Shares</h3>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-2">
-                        <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h5>Uday Pratp Singh</h5>
-                            </div>
-
-                            <div class="col-2">
-                                <a class="link-opacity-60-hover" href="https://www.google.com/"><h5>Grails</h5></a>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <p>To dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.</p>
-                        </div>
-
-                        <div class="row">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View post</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
-                    </div>
-                </div>
+                <h3>
+                    Recent Shares
+                </h3>
                 <hr>
+                <g:each in="${resourcex}" var="resource">
+                    <div class="row">
+                        <div class="col-3">
+                            <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
+                                 alt="User Photo" width="100%" height="auto">
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col">
+                                        <h6>${resource.topic.name}</h6>
+                                    </div>
 
-                <div class="row">
-                    <div class="col-2">
-                        <img src="../src/img.png" alt="Placeholder Image" width="100%" height="auto">
-                    </div>
-
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <h5>Uday Pratp Singh</h5>
+                                    <div class="col">
+                                        <h6>@${resource.createdBy.username}</h6>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <p>${resource.description}</p>
+                                </div>
                             </div>
+                            <div class="row">
+                                <div class="col">
+                                    <g:if test="${resource instanceof LinkSharing.DocumentResource}">
+                                        <a href="${createLink(controller: 'modifyReadingItem', action: 'download', params: [filename: (resource as LinkSharing.DocumentResource).filePath.tokenize('/')[-1]])}">
+                                            Download
+                                        </a>
+                                    </g:if>
+                                </div>
 
-                            <div class="col-2">
-                                <a class="link-opacity-60-hover" href="https://www.google.com/"><h5>Grails</h5></a>
+                                <div class="col">
+                                    <g:if test="${resource instanceof LinkSharing.LinkResource}">
+                                        <a href="${(resource as LinkSharing.LinkResource).url}"
+                                           target="_blank">
+                                            View Full Site
+                                        </a>
+                                    </g:if>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <p>To dread o'er bear the pative shocks their currenter regards of
-                            ressor's deat with.</p>
-                        </div>
-
-                        <div class="row">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">
-                                View post</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
-                        </div>
                     </div>
-                </div>
+                    <hr>
+                </g:each>
+
             </div>
             <br>
 
@@ -307,7 +278,8 @@ body {
                         <label for="formFile" class="form-label">
                             Photo<span style="color: red;">*</span>
                         </label>
-                        <input class="form-control" type="file" name="photo" id="formFile" accept=".png, .jpg, .jpeg" required>
+                        <input class="form-control" type="file" name="photo" id="formFile" accept=".png, .jpg, .jpeg"
+                               required>
                     </div>
 
                     <br>

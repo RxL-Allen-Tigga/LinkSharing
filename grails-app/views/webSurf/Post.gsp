@@ -46,6 +46,7 @@ body {
         editModal.show();
     }
 </script>
+
 <form action="${createLink(controller: 'topicOperations', action: 'editTopic')}" method="POST">
     <div class="modal fade" id="Edit_Topic" tabindex="-1">
         <div class="modal-dialog">
@@ -80,6 +81,7 @@ body {
         editModal.show();
     }
 </script>
+
 <form action="${createLink(controller: 'resourceOperations', action: 'editDescription')}" method="POST">
     <div class="modal fade" id="Edit_Resource" tabindex="-1">
         <div class="modal-dialog">
@@ -193,6 +195,7 @@ body {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
+
 <div class="container">
     <div class="row align-items-start mt-5">
         <div class="col">
@@ -213,7 +216,6 @@ body {
                             <div class="col">
                                 <h5>${resource.createdBy.firstName} ${resource.createdBy.lastName}</h5>
                             </div>
-
                             <div class="col-2">
                                 <g:link controller="webSurf" action="Topic" params="[id: resource.topic?.id]">
                                     <h5>${resource.topic.name}</h5>
@@ -225,37 +227,85 @@ body {
                             <div class="col">
                                 <h6>@${resource.createdBy.username}</h6>
                             </div>
-
-                            <div class="col-3">
-                                <h6>created on : ${resource.dateCreated}</h6>
+                            <div class="col-8">
+                                <h6>Created on: ${resource.dateCreated}</h6>
                             </div>
                         </div>
-
+                        <br>
                         <div class="row">
-                            <div class="col">
-                                <link rel="stylesheet"
-                                      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
-                                <span class="fa fa-star"></span>
+                        <%-- Session user and user rating --%>
+                            <%
+                                def user = session.user
+                                def userRating = 0
+                                if (user) {
+                                    def existingRating = LinkSharing.ResourceRating.findByResourceAndUserAndIsDeleted(resource, user, false)
+                                    if (existingRating) {
+                                        userRating = existingRating.score
+                                    }
+                                }
+
+                                def ratings = LinkSharing.ResourceRating.findAllByResourceAndIsDeleted(resource, false)
+                                def averageRating = ratings ? (ratings*.score.sum() / ratings.size()).round(2) : "No ratings yet"
+                            %>
+
+                            <g:form controller="resourceRatingOperations" action="saveRating">
+                                <g:hiddenField name="resourceId" value="${resource.id}" />
+
+                                <div class="star-rating">
+                                    <g:each in="${5..1}" var="i">
+                                        <input type="radio" id="star${i}" name="score" value="${i}" ${i == userRating ? 'checked' : ''}/>
+                                        <label for="star${i}" title="${i} stars"></label>
+                                    </g:each>
+                                </div>
+
+                                <g:submitButton name="rate" value="Rate" class="btn btn-primary" />
+                            </g:form>
+
+                            <div class="average-rating">
+                                <p><strong>Average Rating:</strong> ${averageRating}</p>
                             </div>
 
-                            <div class="col">
-                                <h6>3.5</h6>
-                            </div>
+                            <style>
+                            .star-rating {
+                                direction: rtl; /* Reversed for proper coloring */
+                                display: inline-flex;
+                                font-size: 2rem;
+                            }
 
-                            <div class="col-6">
-                            </div>
+                            .star-rating input[type="radio"] {
+                                display: none;
+                            }
+
+                            .star-rating label {
+                                color: #ccc;
+                                cursor: pointer;
+                            }
+
+                            .star-rating label::before {
+                                content: '\f005'; /* FontAwesome star */
+                                font-family: FontAwesome;
+                            }
+
+                            /* Selected stars: when radio is checked, color that and all before it */
+                            .star-rating input[type="radio"]:checked ~ label,
+                            .star-rating label:hover,
+                            .star-rating label:hover ~ label {
+                                color: orange;
+                            }
+                            </style>
+
+                            <!-- Include FontAwesome once in the layout or page -->
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                         </div>
-
                     </div>
+
                 </div>
                 <br>
+
                 <div class="row">
                     <p>Description:</p>
                 </div>
+
                 <div class="row">
                     <p>${resource.description}</p>
                 </div>
@@ -282,18 +332,20 @@ body {
                     <div class="col-1">
                         <g:if test="${resource.createdBy.id == session.user.id || session?.user?.admin == true}">
                             <a href="${createLink(controller: 'resourceOperations', action: 'deleteResource', params: [id: resource.id])}"
-       onclick="return confirm('Are you sure you want to delete this resource?');">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
-                                 fill="currentColor"
-                                 class="bi bi-trash3" viewBox="0 0 16 16">
-                                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                            </svg>
+                               onclick="return confirm('Are you sure you want to delete this resource?');">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                     fill="currentColor"
+                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
                             </a>
                         </g:if>
                     </div>
+
                     <div class="col-2">
                         <g:if test="${resource.createdBy.id == session.user.id || session?.user?.admin == true}">
-                            <a href="#" onclick="openEditResourceModal(${resource.id}, '${resource.description?.replaceAll("'", "\\\\'")}')">
+                            <a href="#"
+                               onclick="openEditResourceModal(${resource.id}, '${resource.description?.replaceAll("'", "\\\\'")}')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25"
                                      height="auto" fill="currentColor"
                                      class="bi bi-pencil-square"

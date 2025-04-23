@@ -229,10 +229,31 @@ class WebSurfController {
         ])
     }
     def Login() {
-//        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(sessionUser)
-//        render(view: 'EditProfile', model: [
-//                trendingtopicDataList: trendingtopicDataList
-//        ])
+
+        def resourcex = LS_Resource.executeQuery("""
+    select r
+    from LS_Resource r
+    join r.topic t
+    where t.isDeleted = false
+      and t.visibility = 'PUBLIC'
+      and r.isDeleted = false
+    order by r.dateCreated desc
+""", [max: 5])
+
+//        resourcex.each { resource ->
+//            println("Resource ID: ${resource.id}")
+//            println("Description: ${resource.description}")  // Access description from LS_Resource
+//            println("Topic Name: ${resource.topic?.name}")   // Access topic name from LS_Resource's topic property
+//            println("Created By: ${resource.createdBy?.username}")
+//            println("Created Date: ${resource.dateCreated}")
+//            println("-----")
+//        }
+
+        render(view: 'Login', model: [
+                resourcex: resourcex
+        ])
+
+
     }
     def Post(Long id) {
         if (!session.user) {

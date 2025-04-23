@@ -127,7 +127,6 @@ class TopicOperationsController {
                 flash.message = "Failed to update topic. ${topic.errors?.allErrors}"
             }
         }
-
         redirect(controller: 'webSurf', action: 'Dashboard')
     }
 }

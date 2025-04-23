@@ -3,6 +3,7 @@ info:
     name: '@info.app.name@'
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
+
 dataSource:
   url: jdbc:oracle:thin:@localhost:1521/orclpdb1
   driverClassName: oracle.jdbc.OracleDriver
@@ -17,17 +18,18 @@ dataSource:
 document:
   upload:
     dir: /home/allentigga/IdeaProjects/LinkSharing/grails-app/assets/ResourcesDocFiles
+
 hibernate:
   cache:
     queries: false
     use_second_level_cache: false
     use_query_cache: false
+
 spring:
   servlet:
     multipart:
-      enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 100000000
+      max-request-size: 100000000
 
 grails:
   web:
@@ -35,10 +37,11 @@ grails:
 #    multipart:
 #      maxFileSize: 10MB        # Set this to a suitable limit (e.g., 10MB)
 #      maxRequestSize: 10MB
-  controllers:
-    upload:
-      maxFileSize: 50MB
-      maxRequestSize: 50MB
+  grails:
+    controllers:
+      upload:
+        maxFileSize: 100000000
+        maxRequestSize: 100000000
   plugin:
     console:
       enabled: true
