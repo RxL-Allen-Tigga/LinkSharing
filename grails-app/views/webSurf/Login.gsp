@@ -156,7 +156,7 @@ body {
                                         <h6>@${item.resource.createdBy.username}</h6>
                                     </div>
                                     <div class="col">
-                                        Avg Rating: ${item.average ? String.format('%.2f', item.average) : '0.00'}
+                                        Avg Rating: ${item.average ? String.format('%.2f', item.average) : 'No Ratings Yet'}
                                     </div>
                                 </div>
                             </div>

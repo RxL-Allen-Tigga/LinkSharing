@@ -248,7 +248,7 @@ class WebSurfController {
     LEFT JOIN ResourceRating rr ON rr.resource = r AND rr.isDeleted = false
     WHERE r.isDeleted = false AND t.isDeleted = false AND t.visibility = :publicVisibility
     GROUP BY r.id
-    ORDER BY AVG(rr.score) DESC
+    ORDER BY AVG(rr.score) ASC
 ''', [publicVisibility: LinkSharing.Topic.Visibility.PUBLIC], [max: 5])
 
         def topResourcesWithAvg = results.collect { row ->
@@ -257,9 +257,9 @@ class WebSurfController {
             [resource: LS_Resource.get(id), average: avg]
         }.sort { -(it.average ?: 0) }  // ✅ safely sort by average
 
-        topResourcesWithAvg.each {
-            println "${it.resource.description} - Average: ${it.average ?: 0}"
-        }
+//        topResourcesWithAvg.each {
+//            println "${it.resource.description} - Average: ${it.average ?: No }"
+//        }
 
 
 
@@ -406,6 +406,22 @@ class WebSurfController {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
+        def users = LS_User.findAllByIsDeleted(false)
+        def publicTopics = Topic.findAllByIsDeletedAndVisibility(false, Topic.Visibility.PUBLIC)
+        def publicResources = LS_Resource.createCriteria().list {
+            eq('isDeleted', false)  // Filter LS_Resource where isDeleted is false
+            topic {
+                eq('isDeleted', false)  // Filter Topic where isDeleted is false
+                eq('visibility', Topic.Visibility.PUBLIC)  // Filter Topic where visibility is PUBLIC
+            }
+        }
+
+
+        render(view: 'Search',model: [
+                users: users,
+                publicTopics: publicTopics,
+                publicResources: publicResources
+        ])
     }
     def Topic(Long id) {
         if (!session.user) {
