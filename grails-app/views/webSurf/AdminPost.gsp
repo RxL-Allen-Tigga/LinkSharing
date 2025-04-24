@@ -2,11 +2,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Search</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome (optional) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css"/>
+
+    <style>
+    body {
+        background-image: url('https://i0.wp.com/www.omgubuntu.co.uk/wp-content/uploads/2022/03/jammy-jellyfish-hero.jpg?fit=1473%2C832&ssl=1'); /* Replace with the URL of your image */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .main-content {
+        padding: 20px 50px 50px; /* extra top padding to clear sticky navbar */
+    }
+
+    .tables-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    table.dataTable {
+        width: 100% !important;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+        min-width: 120px;
+    }
+
+    .table-wrapper {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-container {
+        margin-bottom: 10px;
+    }
+    </style>
 </head>
 
 <style>
@@ -38,8 +87,7 @@ body {
 </style>
 
 <body>
-%{--<g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>--}%
-<g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>
+%{--<Header:navbar username="${session.user?.username}"/>--}%
 <div class="container-fluid sticky-top bg-light shadow">
     <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
         <div class="col-4">
@@ -60,6 +108,7 @@ body {
             <div class="row">
                 <div class="col">
                 </div>
+
                 <div class="col-1">
                     <g:link controller="webSurf" action="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
@@ -68,6 +117,7 @@ body {
                         </svg>
                     </g:link>
                 </div>
+
                 <div class="col-1">
                     <a href="#" class="svg-link" data-bs-toggle="modal" data-bs-target="#Create_Topic">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
@@ -150,111 +200,92 @@ body {
 </div>
 
 <div class="container">
-    <div>
-        <g:if test="${flash.message}">
-            <div class="alert alert-warning" role="alert">
-                ${flash.message}
-            </div>
-        </g:if>
-    </div>
-    <div class="row align-items-start text-bg-light p-2 rounded-2 border border-dark p-2 mb-2">
-        <div class="row">
-            <div class="col-6">
-                <h3>Users Details</h3>
-            </div>
-
-            %{--            <div class="col">--}%
-            %{--                <a class="btn btn-primary dropdown-toggle" href="#" role="button"--}%
-            %{--                   data-bs-toggle="dropdown"--}%
-            %{--                   aria-expanded="false">--}%
-            %{--                    All Users--}%
-            %{--                </a>--}%
-            %{--                <ul class="dropdown-menu">--}%
-            %{--                    <li><a class="dropdown-item" href="#">All Users</a></li>--}%
-            %{--                    <li><a class="dropdown-item" href="#">Active</a></li>--}%
-            %{--                    <li><a class="dropdown-item" href="#">Deactive</a></li>--}%
-            %{--                </ul>--}%
-            %{--            </div>--}%
-
-            <div class="col input-group">
-                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
-                </button>
-                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                       aria-describedby="search-addon"/>
-            </div>
+    <g:if test="${flash.message}">
+        <div class="alert alert-warning" role="alert">
+            ${flash.message}
         </div>
-        <br>
-        <table class="table table-striped mb-2">
-            <thead>
-            <tr>
-                <th>
-                    <g:link controller="webSurf" action="AdminPost"
-                            params="[sort: 'id', order: (sortField == 'id' && order == 'asc') ? 'desc' : 'asc']">
-                        ID
-                        <g:if test="${sortField == 'id'}">
-                            <span class="sort-indicator">${order == 'asc' ? '▲' : '▼'}</span>
-                        </g:if>
-                    </g:link>
-                </th>
-                <th>
-                    <g:link controller="webSurf" action="AdminPost"
-                            params="[sort: 'description', order: (sortField == 'description' && order == 'asc') ? 'desc' : 'asc']">
-                        Description
-                        <g:if test="${sortField == 'description'}">
-                            <span class="sort-indicator">${order == 'asc' ? '▲' : '▼'}</span>
-                        </g:if>
-                    </g:link>
-                </th>
-                <th>
-                    <g:link controller="webSurf" action="AdminPost"
-                            params="[sort: 'createdBy.username', order: (sortField == 'createdBy.username' && order == 'asc') ? 'desc' : 'asc']">
-                        Created By
-                        <g:if test="${sortField == 'createdBy.username'}">
-                            <span class="sort-indicator">${order == 'asc' ? '▲' : '▼'}</span>
-                        </g:if>
-                    </g:link>
-                </th>
-                <th>
-                    <g:link controller="webSurf" action="AdminPost"
-                            params="[sort: 'topic.name', order: (sortField == 'topic.name' && order == 'asc') ? 'desc' : 'asc']">
-                        Topic
-                        <g:if test="${sortField == 'topic.name'}">
-                            <span class="sort-indicator">${order == 'asc' ? '▲' : '▼'}</span>
-                        </g:if>
-                    </g:link>
-                </th>
-                <th>
-                    <g:link controller="webSurf" action="AdminPost"
-                            params="[sort: 'dateCreated', order: (sortField == 'dateCreated' && order == 'asc') ? 'desc' : 'asc']">
-                        Date Created
-                        <g:if test="${sortField == 'dateCreated'}">
-                            <span class="sort-indicator">${order == 'asc' ? '▲' : '▼'}</span>
-                        </g:if>
-                    </g:link>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <g:if test="${posts?.size() > 0}">
+    </g:if>
+</div>
+
+<div class="main-content">
+    <div class="search-container">
+        <h2>
+            <label for="globalSearch" class="form-label"><strong>Search:</strong></label>
+        </h2>
+        <input type="text" id="globalSearch" class="form-control" placeholder="Type to search...">
+    </div>
+    <br>
+
+    <div class="tables-container">
+        <div class="table-wrapper text-center border rounded border-dark p-2 mb-2 text-bg-light">
+            <h3>Users</h3>
+            <table id="table1" class="display">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Description Name</th>
+                    <th>Created By</th>
+                    <th>Topic</th>
+                    <th>Date Created</th>
+                </tr>
+                </thead>
+                <tbody>
                 <g:each in="${posts}" var="post">
                     <tr>
-                        <td>${post.id}</td>
+                        <td>
+                            <g:link controller="webSurf" action="Post" params="[id: post.id]">
+                                ${post.id}
+                            </g:link>
+                        </td>
                         <td>${post.description}</td>
-                        <td>${post.createdBy?.username}</td>
-                        <td>${post.topic?.name}</td>
+                        <td>
+                            <g:link controller="webSurf" action="Profile" params="[id: post.createdBy?.id]">
+                                ${post.createdBy?.username}
+                            </g:link>
+                        </td>
+                        <td>
+                            <g:link controller="webSurf" action="Topic" params="[id: post.topic.id]">
+                                ${post.topic?.name}
+                            </g:link>
+                        </td>
                         <td><g:formatDate date="${post.dateCreated}" format="yyyy-MM-dd HH:mm"/></td>
                     </tr>
                 </g:each>
-            </g:if>
-            <g:else>
-                <tr>
-                    <td colspan="5">No posts found.</td>
-                </tr>
-            </g:else>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        const commonOptions = {
+            dom: 'lrtip', // removes the default search box (removes the 'f')
+            search: {
+                caseInsensitive: true
+            }
+        };
+
+        const table1 = $('#table1').DataTable(commonOptions);
+
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        const globalSearch = debounce(function () {
+            const value = $('#globalSearch').val();
+            table1.search(value).draw();
+        }, 300);
+
+        $('#globalSearch').on('keyup', globalSearch);
+    });
+
+</script>
 <br>
 <g:render template="/shared/navbarModals"/>
 </body>

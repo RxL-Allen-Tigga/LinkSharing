@@ -524,17 +524,6 @@ body {
                     <div class="col">
                         <h3>Posts</h3>
                     </div>
-
-                    <div class="col">
-                        <div class="input-group">
-                            <button type="button" class="btn btn-outline-primary"
-                                    data-mdb-ripple-init><h5>Search</h5>
-                            </button>
-                            <input type="search" class="form-control rounded" placeholder="Search"
-                                   aria-label="Search"
-                                   aria-describedby="search-addon"/>
-                        </div>
-                    </div>
                 </div>
                 <hr>
                 <g:each in="${resources}" var="resource">

@@ -57,7 +57,6 @@
 </head>
 
 <body>
-
 <!-- ✅ STICKY NAVBAR -->
 <div class="container-fluid sticky-top bg-light shadow">
     <div class="row align-items-center text-bg-light p-3 border-dark">

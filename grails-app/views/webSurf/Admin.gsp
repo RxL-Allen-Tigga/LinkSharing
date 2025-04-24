@@ -2,11 +2,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Search</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome (optional) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css"/>
+
+    <style>
+    body {
+        background-image: url('https://i0.wp.com/www.omgubuntu.co.uk/wp-content/uploads/2022/03/jammy-jellyfish-hero.jpg?fit=1473%2C832&ssl=1'); /* Replace with the URL of your image */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .main-content {
+        padding: 20px 50px 50px; /* extra top padding to clear sticky navbar */
+    }
+
+    .tables-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    table.dataTable {
+        width: 100% !important;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+        min-width: 120px;
+    }
+
+    .table-wrapper {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-container {
+        margin-bottom: 10px;
+    }
+    </style>
 </head>
 
 <style>
@@ -59,6 +108,7 @@ body {
             <div class="row">
                 <div class="col">
                 </div>
+
                 <div class="col-1">
                     <g:link controller="webSurf" action="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
@@ -148,92 +198,109 @@ body {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
-<div class="container">
-    <div>
-        <g:if test="${flash.message}">
-            <div class="alert alert-warning" role="alert">
-                ${flash.message}
-            </div>
-        </g:if>
-    </div>
-    <div class="row align-items-start text-bg-light p-2 rounded-2 border border-dark p-2 mb-2">
-        <div class="row">
-            <div class="col-6">
-                <h3>Users Details</h3>
-            </div>
-            <div class="col input-group">
-                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
-                </button>
-                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                       aria-describedby="search-addon"/>
-            </div>
-        </div>
-        <br>
-        <table class="table table-striped mb-2">
-            <thead>
-            <tr>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'id', order: sortColumn == 'id' && sortDirection == 'asc' ? 'desc' : 'asc']">Id</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'username', order: sortColumn == 'username' && sortDirection == 'asc' ? 'desc' : 'asc']">Username</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'email', order: sortColumn == 'email' && sortDirection == 'asc' ? 'desc' : 'asc']">Email</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'firstName', order: sortColumn == 'firstName' && sortDirection == 'asc' ? 'desc' : 'asc']">Firstname</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'lastName', order: sortColumn == 'lastName' && sortDirection == 'asc' ? 'desc' : 'asc']">Lastname</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'active', order: sortColumn == 'active' && sortDirection == 'asc' ? 'desc' : 'asc']">Status</g:link>
-                </th>
-                <th scope="col" class="sortable">
-                    <g:link action="Admin" params="[sort: 'admin', order: sortColumn == 'admin' && sortDirection == 'asc' ? 'desc' : 'asc']">Admin</g:link>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <g:each in="${users}" var="user">
-                <tr>
-                    <td>${user.id}</td>
-                    <td>@${user.username}</td>
-                    <td>${user.email}</td>
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>
-                        <g:if test="${!user.isDeleted}">
-                            <g:link controller="LS_UserRegister" action="updateToInActive" params="[id: user.id]">
-                                Active
-                            </g:link>
-                        </g:if>
-                        <g:else>
-                            <g:link controller="LS_UserRegister" action="updateToActive" params="[id: user.id]">
-                                Inactive
-                            </g:link>
-                        </g:else>
-                    </td>
-                    <td>
-                        <g:if test="${user.admin}">
-                            <g:link controller="LS_UserRegister" action="degradeFromAdmin" params="[id: user.id]">
-                                Admin
-                            </g:link>
-                        </g:if>
-                        <g:else>
-                            <g:link controller="LS_UserRegister" action="updateToAdmin" params="[id: user.id]">
-                                Non Admin
-                            </g:link>
-                        </g:else>
-                    </td>
 
+<div class="container">
+    <g:if test="${flash.message}">
+        <div class="alert alert-warning" role="alert">
+            ${flash.message}
+        </div>
+    </g:if>
+</div>
+
+<div class="main-content">
+    <div class="search-container">
+        <h2>
+        <label for="globalSearch" class="form-label"><strong>Search:</strong></label>
+        </h2>
+        <input type="text" id="globalSearch" class="form-control" placeholder="Type to search...">
+    </div>
+    <br>
+
+    <div class="tables-container">
+        <div class="table-wrapper text-center border rounded border-dark p-2 mb-2 text-bg-light">
+            <h3>Users</h3>
+            <table id="table1" class="display">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Status</th>
+                    <th>Admin</th>
                 </tr>
-            </g:each>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <g:each in="${users}" var="user">
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>@${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>
+                            <g:if test="${!user.isDeleted}">
+                                <g:link controller="LS_UserRegister" action="updateToInActive" params="[id: user.id]">
+                                    Active
+                                </g:link>
+                            </g:if>
+                            <g:else>
+                                <g:link controller="LS_UserRegister" action="updateToActive" params="[id: user.id]">
+                                    Inactive
+                                </g:link>
+                            </g:else>
+                        </td>
+                        <td>
+                            <g:if test="${user.admin}">
+                                <g:link controller="LS_UserRegister" action="degradeFromAdmin" params="[id: user.id]">
+                                    Admin
+                                </g:link>
+                            </g:if>
+                            <g:else>
+                                <g:link controller="LS_UserRegister" action="updateToAdmin" params="[id: user.id]">
+                                    Non Admin
+                                </g:link>
+                            </g:else>
+                        </td>
+
+                    </tr>
+                </g:each>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        const commonOptions = {
+            dom: 'lrtip', // removes the default search box (removes the 'f')
+            search: {
+                caseInsensitive: true
+            }
+        };
+
+        const table1 = $('#table1').DataTable(commonOptions);
+
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        const globalSearch = debounce(function () {
+            const value = $('#globalSearch').val();
+            table1.search(value).draw();
+        }, 300);
+
+        $('#globalSearch').on('keyup', globalSearch);
+    });
+
+</script>
 <br>
 <g:render template="/shared/navbarModals"/>
 </body>
