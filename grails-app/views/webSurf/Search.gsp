@@ -15,12 +15,18 @@
 
     <style>
     body {
+        background-image: url('https://i0.wp.com/www.omgubuntu.co.uk/wp-content/uploads/2022/03/jammy-jellyfish-hero.jpg?fit=1473%2C832&ssl=1'); /* Replace with the URL of your image */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    body {
         padding: 0;
         margin: 0;
     }
 
     .main-content {
-        padding: 100px 50px 50px; /* extra top padding to clear sticky navbar */
+        padding: 20px 50px 50px; /* extra top padding to clear sticky navbar */
     }
 
     .tables-container {
@@ -45,7 +51,7 @@
     }
 
     .search-container {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
     </style>
 </head>
@@ -70,6 +76,14 @@
             <div class="row">
                 <div class="col">
                 </div>
+                <div class="col-1">
+                    <g:link controller="webSurf" action="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
+                             class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </g:link>
+                </div>
 
                 <div class="col-2 dropdown text-end">
                     <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -90,6 +104,9 @@
                         <li><a class="dropdown-item" href="/LS_UserRegister/logout">Logout</a></li>
                     </ul>
                 </div>
+                <!-- Bootstrap Bundle includes Popper.js (required for dropdowns) -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
             </div>
         </div>
     </div>
@@ -104,7 +121,7 @@
     <br>
 
     <div class="tables-container">
-        <div class="table-wrapper text-center">
+        <div class="table-wrapper text-center border rounded border-dark p-2 mb-2 text-bg-light">
             <h3>Users</h3>
             <table id="table1" class="display">
                 <thead>
@@ -118,16 +135,19 @@
                 <g:each in="${users}" var="user">
                     <tr>
                         <td><g:link controller="webSurf" action="Profile" params="[id: user.id]">@${user.username}
-                        </g:link></td>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
+                        </g:link>
+                        </td>
+                        <td>${user.firstName}
+                        </td>
+                        <td>${user.lastName}
+                        </td>
                     </tr>
                 </g:each>
                 </tbody>
             </table>
         </div>
 
-        <div class="table-wrapper text-center">
+        <div class="table-wrapper text-center border rounded border-dark p-2 mb-2 text-bg-light">
             <h3>Topics</h3>
             <table id="table2" class="display">
                 <thead>
@@ -149,7 +169,7 @@
             </table>
         </div>
 
-        <div class="table-wrapper text-center">
+        <div class="table-wrapper text-center border rounded border-dark p-2 mb-2 text-bg-light">
             <h3>Posts</h3>
             <table id="table3" class="display">
                 <thead>

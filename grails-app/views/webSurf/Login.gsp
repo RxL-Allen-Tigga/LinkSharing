@@ -65,7 +65,40 @@ body {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
+<form action="/passwordReset/forgotPassword" method="POST">
+    <div class="modal fade" id="ForgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="forgotPasswordLabel">Forgot Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <!-- Email Input -->
+                    <div class="mb-3">
+                        <label for="forgotEmail" class="form-label">Enter your registered email address<span style="color: red;">*</span></label>
+                        <input
+                                type="email"
+                                class="form-control"
+                                id="forgotEmail"
+                                name="email"
+                                placeholder="you@example.com"
+                                required>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send Password</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
 
 <div class="container">
     <div>
@@ -222,9 +255,9 @@ body {
                         </div>
 
                         <div class="col-3">
-                            <a class="link-opacity-60-hover" href="https://www.google.com/">Forgot Password ?</a>
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-                                  rel="stylesheet">
+                            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#ForgotPasswordModal">
+                                Forgot Password?
+                            </button>
                         </div>
                     </div>
                 </form>

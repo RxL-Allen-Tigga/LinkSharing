@@ -30,8 +30,26 @@ spring:
     multipart:
       max-file-size: 100000000
       max-request-size: 100000000
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nightknight237@gmail.com
+#    password: '@qwerty123plm'
+    password: 'oewl iycd syrp qbxr'
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
 
 grails:
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: nightknight237@gmail.com
+#    password: '@qwerty123plm'
+#    props:
+#      mail.smtp.auth: true
+#      mail.smtp.starttls.enable: true
   web:
     disableMultipart: false
 #    multipart:

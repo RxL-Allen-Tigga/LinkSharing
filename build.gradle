@@ -14,7 +14,7 @@ group = "LinkSharing"
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.grails.org/grails/core/" }
+    maven { url "https://repo.grails.org/grails/core" }
 }
 
 configurations {
@@ -50,7 +50,7 @@ dependencies {
     compileOnly("io.micronaut:micronaut-inject-groovy")
     console("org.grails:grails-console")
     runtimeOnly("com.bertramlabs.plugins:asset-pipeline-grails:4.3.0")
-    runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.h2database:h2:2.3.232")  // Correct H2 version
     runtimeOnly("org.apache.tomcat:tomcat-jdbc")
     runtimeOnly("org.fusesource.jansi:jansi:1.18")
     testImplementation("io.micronaut:micronaut-inject-groovy")
@@ -64,17 +64,21 @@ dependencies {
     testRuntimeOnly("org.seleniumhq.selenium:selenium-chrome-driver:4.19.1")
     testRuntimeOnly("org.seleniumhq.selenium:selenium-firefox-driver:4.19.1")
     testRuntimeOnly("org.seleniumhq.selenium:selenium-safari-driver:4.19.1")
-    testImplementation("io.micronaut:micronaut-http-client")
 
-//    Added
-    testImplementation("com.h2data  base:h2:2.3.232")
+    // Grails Mail plugin
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.grails.plugins:grails-console:2.1.1")
     runtimeOnly("com.oracle.database.jdbc:ojdbc8:19.8.0.0")
     implementation("org.hibernate:hibernate-core:5.4.22.Final")
-    runtimeOnly("com.h2database:h2")
     implementation 'org.grails:grails-datastore-gorm-hibernate5'
     implementation group: 'org.codehaus.groovy', name: 'groovy-dateutil', version: '3.0.13'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+//    implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
+    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+
+    implementation 'org.eclipse.angus:angus-mail:2.0.2' // Needed implementation for javax.mail-like behavior
 }
 
 application {
@@ -101,17 +105,3 @@ assets {
     minifyJs = true
     minifyCss = true
 }
-//Added
-//sourceSets {
-//    main {
-//        groovy {
-//            srcDirs = ['src/main/groovy']
-//        }
-//    }
-//    test {
-//        groovy {
-//            srcDirs = ['src/test/groovy']
-//        }
-//    }
-//}
-
