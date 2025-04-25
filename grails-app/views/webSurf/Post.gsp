@@ -129,6 +129,7 @@ body {
             <div class="row">
                 <div class="col">
                 </div>
+
                 <div class="col-1">
                     <g:link controller="webSurf" action="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
@@ -205,6 +206,7 @@ body {
             </div>
         </g:if>
     </div>
+
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
@@ -224,6 +226,7 @@ body {
                             <div class="col">
                                 <h5>${resource.createdBy.firstName} ${resource.createdBy.lastName}</h5>
                             </div>
+
                             <div class="col-5">
                                 <g:link controller="webSurf" action="Topic" params="[id: resource.topic?.id]">
                                     <h5>${resource.topic.name}</h5>
@@ -233,13 +236,18 @@ body {
 
                         <div class="row">
                             <div class="col">
-                                <h6>@${resource.createdBy.username}</h6>
+                                <g:link controller="webSurf" action="Profile" params="[id: resource.createdBy?.id]">
+                                    <h6>@${resource.createdBy.username}</h6>
+                                </g:link>
+
                             </div>
+
                             <div class="col-8">
                                 <h6>Created on: ${resource.dateCreated}</h6>
                             </div>
                         </div>
                         <br>
+
                         <div class="row">
                         <%-- Session user and user rating --%>
                             <%
@@ -257,16 +265,17 @@ body {
                             %>
 
                             <g:form controller="resourceRatingOperations" action="saveRating">
-                                <g:hiddenField name="resourceId" value="${resource.id}" />
+                                <g:hiddenField name="resourceId" value="${resource.id}"/>
 
                                 <div class="star-rating">
                                     <g:each in="${5..1}" var="i">
-                                        <input type="radio" id="star${i}" name="score" value="${i}" ${i == userRating ? 'checked' : ''}/>
+                                        <input type="radio" id="star${i}" name="score"
+                                               value="${i}" ${i == userRating ? 'checked' : ''}/>
                                         <label for="star${i}" title="${i} stars"></label>
                                     </g:each>
                                 </div>
 
-                                <g:submitButton name="rate" value="Rate" class="btn btn-primary" />
+                                <g:submitButton name="rate" value="Rate" class="btn btn-primary"/>
                             </g:form>
 
                             <div class="average-rating">
@@ -303,7 +312,8 @@ body {
                             </style>
 
                             <!-- Include FontAwesome once in the layout or page -->
-                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                            <link rel="stylesheet"
+                                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                         </div>
                     </div>
 

@@ -235,7 +235,11 @@ body {
                 <g:each in="${users}" var="user">
                     <tr>
                         <td>${user.id}</td>
-                        <td>@${user.username}</td>
+                        <td>
+                            <g:link controller="webSurf" action="Profile" params="[id:user.id]">
+                                @${user.username}
+                            </g:link>
+                        </td>
                         <td>${user.email}</td>
                         <td>${user.firstName}</td>
                         <td>${user.lastName}</td>

@@ -131,4 +131,97 @@ class TopicMiscellaneousService {
             return [success: false, message: "Error sharing document: ${e.message}"]
         }
     }
+
+    def getTopicData(Long id, def sessionUser){
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", sessionUser)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+
+//        Resouces of current topic (Posts)
+        def userTopic = Topic.findByIdAndIsDeleted(id, false)
+        def resources = LS_Resource.createCriteria().list {
+            eq("topic.id", userTopic.id)
+            eq("isDeleted", false)
+            order("dateCreated", "desc")
+        }
+
+//        Other subscribers of current topic
+        def activeSubscriptionCount = Subscription.createCriteria().get {
+            eq("topic", userTopic)
+            eq("isDeleted", false)
+            projections {
+                countDistinct("id")
+            }
+        } ?: 0
+        def activeResourceCount = LS_Resource.createCriteria().get {
+            eq("topic", userTopic)
+            eq("isDeleted", false)
+            projections {
+                countDistinct("id")
+            }
+        } ?: 0
+
+//        Data to check if session user is subcriber to curent topic
+        def userSubscription = Subscription.findByUserAndTopicAndIsDeleted(sessionUser, userTopic, false)
+
+//        Subscibers of current topic (Subscriptions)
+        def topicId = userTopic.id // Use actual user topic id here
+        def topicSubscribers = LS_User.executeQuery("""
+            select new map(
+                u as user,
+                (select count(distinct t1.id)
+                 from Topic t1
+                 where t1.createdBy = u and t1.visibility = 'PUBLIC' and t1.isDeleted = false) as publicTopicCount,
+                (select count(distinct r1.id)
+                 from LS_Resource r1
+                 where r1.createdBy = u and r1.isDeleted = false and r1.topic.visibility = 'PUBLIC') as publicPostCount
+            )
+            from Subscription s
+            join s.user u
+            join s.topic t
+            where s.isDeleted = false
+              and t.isDeleted = false
+              and t.id = :topicId
+        """, [topicId: userTopic.id])
+
+        return [
+                userTopic              : userTopic,
+                activeSubscriptionCount: activeSubscriptionCount,
+                activeResourceCount    : activeResourceCount,
+                userSubscription       : userSubscription,
+                topicSubscribers       : topicSubscribers,
+                subscribedTopics       : subscribedTopics,
+                resources              : resources
+        ]
+    }
+    def editTopic(params, def user) {
+        Long topicId = params.long("id")
+        String newName = params.name?.trim()
+
+        def topic = Topic.findById(topicId)
+        if (!topic) {
+            return [success: false, message: "Topic not found."]
+        }
+
+        def existingTopic = Topic.findByNameAndIsDeleted(newName, false)
+        if (existingTopic && existingTopic.id != topicId) {
+            return [success: false, message: "A topic with this name already exists."]
+        }
+
+        if (user.admin || topic.createdBy.id == user.id) {
+            topic.name = newName
+            if (topic.validate()) {
+                topic.save(flush: true)
+                return [success: true, message: "Topic updated successfully."]
+            } else {
+                return [success: false, message: "Failed to update topic. ${topic.errors?.allErrors}"]
+            }
+        }
+
+        return [success: false, message: "You are not authorized to edit this topic."]
+    }
 }

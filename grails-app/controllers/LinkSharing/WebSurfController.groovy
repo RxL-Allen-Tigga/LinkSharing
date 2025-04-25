@@ -1,525 +1,120 @@
 package LinkSharing
+
 import org.hibernate.criterion.CriteriaSpecification
 
 class WebSurfController {
+    UserMiscellaneousService userMiscellaneousService
+    DashboardMiscellaneousService dashboardMiscellaneousService
     TrendingTopicsService trendingTopicsService
-    def index(){
+    EditProfileMiscellaneousService editProfileMiscellaneousService
+    LoginMiscellaneousService loginMiscellaneousService
+    PostMiscellaneousService postMiscellaneousService
+    ProfileMiscellaneousService profileMiscellaneousService
+    TopicMiscellaneousService topicMiscellaneousService
+
+    def index() {
     }
+
     def Admin() {
         if (!session.user?.admin) {
             redirect(controller: "webSurf", action: "Login")
+            return
         }
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", session.user)
-            eq("isDeleted", false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
+        def result = userMiscellaneousService.getAdminData(session.user)
 
-        // Get the sort column and direction from the request, or set default to "username" and "asc"
-        def sortColumn = params.sort ?: "username"
-        def sortDirection = params.order ?: "asc"
-        def users = LS_User.createCriteria().list {
-            order(sortColumn, sortDirection)
-        }
-
-        render(view: 'Admin', model: [
-                subscribedTopics: subscribedTopics,
-                users: users,
-                sortColumn: sortColumn,
-                sortDirection: sortDirection
-        ])
+        render(view: 'Admin', model: result)
     }
+
     def AdminTopic() {
         if (!session.user?.admin) {
             redirect(controller: "webSurf", action: "Login")
-            return // Important: prevent further execution after redirect
+            return
         }
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", session.user)
-            eq("isDeleted", false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
+        def result = userMiscellaneousService.getAdminTopicData(session.user, params)
 
-        def sortField = params.sort ?: "id"
-        def sortOrder = params.order ?: "asc"
-        def topics = Topic.createCriteria().list {
-            eq("isDeleted", false)
-            order(sortField, sortOrder)
-        }
-
-        render(view: 'AdminTopic', model: [
-                subscribedTopics: subscribedTopics,
-                topics: topics,
-                sortField: sortField,
-                order: sortOrder
-        ])
+        render(view: 'AdminTopic', model: result)
     }
 
-    def AdminPost(){
+    def AdminPost() {
         if (!session.user?.admin) {
-            redirect(controller: "webSurf", action: "Login")
-        }
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", session.user)
-            eq("isDeleted",false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
-        def sortField = params.sort ?: "id"
-        def sortOrder = params.order ?: "asc"
-        def posts = LS_Resource.createCriteria().list {
-            eq("isDeleted", false)
-            order(sortField, sortOrder)
-        }
-
-        render(view: 'AdminPost', model: [
-                subscribedTopics: subscribedTopics,
-                posts: posts,
-                sortField: sortField,
-                order: sortOrder
-        ])
-    }
-    def Dashboard() {
-        def sessionUser = session.user
-        if (!sessionUser) {
             redirect(controller: "webSurf", action: "Login")
             return
         }
-//        User subscribed topics
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", sessionUser)
-            eq("isDeleted",false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
+        def result = userMiscellaneousService.getAdminPostData(session.user, params)
 
-//        Top 5 subscription
-        def pageSize = 5
+        render(view: 'AdminPost', model: result)
+    }
 
-//        def page = params.int('page') ?: 1
-//        def subscriptions = Subscription.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
-        def subscriptions = Subscription.createCriteria().list() {
-            eq('user', sessionUser)
-            eq("isDeleted",false)
-            order('dateCreated', 'desc')
-            topic {
-                eq("isDeleted", false)
-            }
+    def Dashboard() {
+        def sessionUser = session.user
+        if (!session.user) {
+            redirect(controller: "webSurf", action: "Login")
+            return
         }
-//        def totalSubscriptions = subscriptions.totalCount
-//        def totalPages = Math.ceil(totalSubscriptions / pageSize)
+        def dashboardData = dashboardMiscellaneousService.getDashboardData(session.user)
 
-        //Your Inbox
-//        def UnreadItemPage = params.int('page') ?: 1
-//        def totalUnread = ReadingItem.createCriteria().list(max: pageSize, offset: (page - 1) * pageSize) {
-        def totalUnread = ReadingItem.createCriteria().list() {
-            eq('user', sessionUser)
-            eq('isRead', false)
-            eq('isDeleted', false)
-            resource {
-                eq('isDeleted', false)
-                topic {
-                    'in'("id", subscribedTopics*.id)
-                    eq("isDeleted", false)
-                }
-            }
-        }
-//        def totalUnreadItemPage = Math.ceil(totalUnread.totalCount / pageSize)
-//        println(totalUnreadItemPage)
-//        totalUnread.each { item ->
-//            println "Topic: ${item.resource?.topic?.name}"
-//            println "Created by: ${item.resource?.createdBy?.username}"
-//        }
-        //
+//        Trending Topics Data (Top Trending Topics)
+        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(session.user)
 
-//        Your profile
-        def userSubscribedTopics = Topic.createCriteria().list {
-            createAlias("subscription", "s")
-            eq("s.user", session.user)
-            eq("s.isDeleted", false)
-            eq("isDeleted", false)
-            order("name", "asc")
-        }
-        def userSubscribedTopicsCount = Topic.createCriteria().count {
-            createAlias("subscription", "s")
-            eq("s.user", session.user)
-            eq("s.isDeleted", false)
-            eq("isDeleted", false)
-        }
-        def userCreatedTopics = Topic.createCriteria().list {
-            eq("createdBy", session.user)
-            eq("isDeleted", false)
-            order("name", "asc")
-        }
-        def userCreatedTopicsCount = Topic.createCriteria().count {
-            eq("createdBy", session.user)
-            eq("isDeleted", false)
-        }
-//        Trending Topics
-
-        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(sessionUser)
-        render(view: 'Dashboard', model: [
-                subscribedTopics: subscribedTopics,
-
-//                totalPages: totalPages,
-//                currentPage: page,
-                subscriptions: subscriptions,
-
-//                totalUnreadItemPage: totalUnreadItemPage,
-//                UnreadItemPage: UnreadItemPage,
-                totalUnread: totalUnread,
-
-//                totalSubscriptionCount:totalSubscriptionCount,
-//                totalPostsCount:totalPostsCount,
-
-                userSubscribedTopics:userSubscribedTopics,
-                userSubscribedTopicsCount: userSubscribedTopicsCount,
-                userCreatedTopics:userCreatedTopics,
-                userCreatedTopicsCount:userCreatedTopicsCount,
-
-//                trendingTopics: trendingTopics
+        render(view: 'Dashboard', model: dashboardData + [
                 trendingtopicDataList: trendingtopicDataList
         ])
     }
+
     def EditProfile() {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
-        def userSubscribedTopics = Topic.createCriteria().list {
-            createAlias("subscription", "s")
-            eq("s.user", session.user)
-            eq("s.isDeleted", false)
-            eq("isDeleted", false)
-            order("name", "asc")
-        }
-        def userSubscribedTopicsCount = Topic.createCriteria().count {
-            createAlias("subscription", "s")
-            eq("s.user", session.user)
-            eq("s.isDeleted", false)
-            eq("isDeleted", false)
-        }
-        def userCreatedTopics = Topic.createCriteria().list {
-            eq("createdBy", session.user)
-            eq("isDeleted", false)
-            order("name", "asc")
-        }
-        def userCreatedTopicsCount = Topic.createCriteria().count {
-            eq("createdBy", session.user)
-            eq("isDeleted", false)
-        }
+        def editProfileData = editProfileMiscellaneousService.getEditProfileData(session.user)
 
-        def subscriptions = Subscription.createCriteria().list() {
-            eq('user', session.user)
-            eq("isDeleted",false)
-            order('dateCreated', 'desc')
-            topic {
-                eq("isDeleted", false)
-            }
-        }
-        render(view: 'EditProfile', model: [
-                userSubscribedTopics: userSubscribedTopics,
-                userSubscribedTopicsCount: userSubscribedTopicsCount,
-                userCreatedTopics: userCreatedTopics,
-                userCreatedTopicsCount: userCreatedTopicsCount,
-                subscriptions: subscriptions
-        ])
+        render(view: 'EditProfile', model: editProfileData)
     }
+
     def Login() {
+        def loginData = loginMiscellaneousService.getLoginData()
 
-        def resourcex = LS_Resource.executeQuery("""
-    select r
-    from LS_Resource r
-    join r.topic t
-    where t.isDeleted = false
-      and t.visibility = 'PUBLIC'
-      and r.isDeleted = false
-    order by r.dateCreated desc
-""", [max: 5])
-        def results = LS_Resource.executeQuery('''
-    SELECT r.id, AVG(rr.score)
-    FROM LS_Resource r
-    JOIN r.topic t
-    LEFT JOIN ResourceRating rr ON rr.resource = r AND rr.isDeleted = false
-    WHERE r.isDeleted = false AND t.isDeleted = false AND t.visibility = :publicVisibility
-    GROUP BY r.id
-    ORDER BY AVG(rr.score) ASC
-''', [publicVisibility: LinkSharing.Topic.Visibility.PUBLIC], [max: 5])
-
-        def topResourcesWithAvg = results.collect { row ->
-            def id = row[0]
-            def avg = row[1]
-            [resource: LS_Resource.get(id), average: avg]
-        }.sort { -(it.average ?: 0) }  // ✅ safely sort by average
-
-//        topResourcesWithAvg.each {
-//            println "${it.resource.description} - Average: ${it.average ?: No }"
-//        }
-
-
-
-//        resourcex.each { resource ->
-//            println("Resource ID: ${resource.id}")
-//            println("Description: ${resource.description}")  // Access description from LS_Resource
-//            println("Topic Name: ${resource.topic?.name}")   // Access topic name from LS_Resource's topic property
-//            println("Created By: ${resource.createdBy?.username}")
-//            println("Created Date: ${resource.dateCreated}")
-//            println("-----")
-//        }
-
-        render(view: 'Login', model: [
-                resourcex: resourcex,
-                topResourcesWithAvg: topResourcesWithAvg
-        ])
-
-
+        render(view: 'Login', model: loginData)
     }
+
     def Post(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
-        def resource = LS_Resource.findByIdAndIsDeleted(id, false)
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", session.user)
-            eq("isDeleted",false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
+        def postData = postMiscellaneousService.getPostData(session.user, id)
+
+//        Trending Topics Data (Top Trending Topics)
         def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(session.user)
-        render(view: 'Post',model: [
-                resource: resource,
-                subscribedTopics: subscribedTopics,
+
+        render(view: 'Post', model: postData + [
                 trendingtopicDataList: trendingtopicDataList
         ])
     }
+
     def Profile(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
-        def userProfile = LS_User.get(id)
-        def userSubscribedTopicsCount = Topic.createCriteria().count {
-            createAlias("subscription", "s")
-            eq("s.user", userProfile)
-            eq("s.isDeleted", false)
-            eq("isDeleted", false)
-        }
-        def userCreatedTopicsCount = Topic.createCriteria().count {
-            eq("createdBy", userProfile)
-            eq("isDeleted", false)
-        }
+        def profileData=profileMiscellaneousService.getProfileData(session.user,id)
 
-        def topics = Topic.findAllByCreatedByAndIsDeleted(userProfile, false)
-        def userCreatedTopics = Topic.findAllByCreatedByAndIsDeleted(userProfile, false).collect { topic ->
-            def subCount = Subscription.createCriteria().get {
-                eq("topic", topic)
-                eq("isDeleted", false)
-                projections {
-                    countDistinct("id")
-                }
-            } ?: 0
-
-            def resCount = LS_Resource.createCriteria().get {
-                eq("topic", topic)
-                eq("isDeleted", false)
-                projections {
-                    countDistinct("id")
-                }
-            } ?: 0
-
-            def subscription = Subscription.createCriteria().get {
-                eq("topic", topic)
-                eq("user", session.user)
-                eq("isDeleted", false)
-            }
-
-            return [topic, subCount, resCount, subscription]
-        }
-
-        // Define subscriptions of the profile user
-        def subscriptions = Subscription.createCriteria().list {
-            eq("user", userProfile)
-            eq("isDeleted", false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }
-
-// Build detailed data for each subscription
-        def subscriptionData = subscriptions.collect { sub ->
-            def topic = sub.topic
-
-            // Subscription of session user to the same topic
-            def sessionUserSub = Subscription.findByUserAndTopicAndIsDeleted(session.user, topic, false)
-
-            // Count of active subscriptions on the topic
-            def activeSubCount = Subscription.createCriteria().get {
-                eq("topic", topic)
-                eq("isDeleted", false)
-                projections {
-                    countDistinct("id")
-                }
-            } ?: 0
-
-            // Count of active posts/resources on the topic
-            def activePostCount = LS_Resource.createCriteria().get {
-                eq("topic", topic)
-                eq("isDeleted", false)
-                projections {
-                    countDistinct("id")
-                }
-            } ?: 0
-
-            return [
-                    otherUserSub    : sub,
-                    topic           : topic,
-                    sessionUserSub  : sessionUserSub,
-                    activeSubCount  : activeSubCount,
-                    activePostCount : activePostCount
-            ]
-        }
-        def resources = LS_Resource.createCriteria().list {
-            eq("createdBy.id", userProfile.id)
-            eq("isDeleted", false)
-            order("dateCreated", "desc")
-        }
-
-        render(view: 'Profile',model: [
-                id: id,
-                userProfile: userProfile,
-                userSubscribedTopicsCount: userSubscribedTopicsCount,
-                userCreatedTopicsCount: userCreatedTopicsCount,
-//                Topics
-                userCreatedTopics: userCreatedTopics,
-//                Subscriptions
-                subscriptionData: subscriptionData,
-//                Resource
-                resources: resources
-        ])
+        render(view: 'Profile', model: profileData)
     }
+
     def Search() {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
         }
-        def users = LS_User.findAllByIsDeleted(false)
-        def publicTopics = Topic.findAllByIsDeletedAndVisibility(false, Topic.Visibility.PUBLIC)
-        def publicResources = LS_Resource.createCriteria().list {
-            eq('isDeleted', false)  // Filter LS_Resource where isDeleted is false
-            topic {
-                eq('isDeleted', false)  // Filter Topic where isDeleted is false
-                eq('visibility', Topic.Visibility.PUBLIC)  // Filter Topic where visibility is PUBLIC
-            }
-        }
+        def searchData=userMiscellaneousService.getSearchData()
 
-
-        render(view: 'Search',model: [
-                users: users,
-                publicTopics: publicTopics,
-                publicResources: publicResources
-        ])
+        render(view: 'Search', model: searchData)
     }
+
     def Topic(Long id) {
         if (!session.user) {
             redirect(controller: "webSurf", action: "Login")
             return // important to stop further execution
         }
-        def subscribedTopics = Subscription.createCriteria().list {
-            eq("user", session.user)
-            eq("isDeleted",false)
-            topic {
-                eq("isDeleted", false)
-            }
-        }*.topic
+        def topicData=topicMiscellaneousService.getTopicData(id,session.user)
 
-        def userTopic = Topic.findByIdAndIsDeleted(id, false)
-        def resources = LS_Resource.createCriteria().list {
-            eq("topic.id", userTopic.id)
-            eq("isDeleted", false)
-            order("dateCreated", "desc")
-        }
-
-        def activeSubscriptionCount = Subscription.createCriteria().get {
-            eq("topic", userTopic)
-            eq("isDeleted", false)
-            projections {
-                countDistinct("id")
-            }
-        } ?: 0
-
-        def activeResourceCount = LS_Resource.createCriteria().get {
-            eq("topic", userTopic)
-            eq("isDeleted", false)
-            projections {
-                countDistinct("id")
-            }
-        } ?: 0
-
-        def userSubscription = Subscription.findByUserAndTopicAndIsDeleted(session.user, userTopic, false)
-
-        def topicId = 123L // replace with your topic ID
-
-        def topicSubscribers = LS_User.executeQuery("""
-        select new map(
-            u as user,
-            (select count(distinct t1.id)
-             from Topic t1
-             where t1.createdBy = u and t1.visibility = 'PUBLIC' and t1.isDeleted = false) as publicTopicCount,
-            (select count(distinct r1.id)
-             from LS_Resource r1
-             where r1.createdBy = u and r1.isDeleted = false and r1.topic.visibility = 'PUBLIC') as publicPostCount
-        )
-        from Subscription s
-        join s.user u
-        join s.topic t
-        where s.isDeleted = false
-          and t.isDeleted = false
-          and t.id = :topicId
-    """, [topicId: userTopic.id])
-        // Step 1: Get subscribed users
-//        def subscribedUsers = Subscription.createCriteria().list {
-//            createAlias("topic", "t")
-//            eq("isDeleted", false)
-//            eq("t.isDeleted", false)
-//            eq("t.id", userTopic.id)
-//            projections {
-//                property("user") // Get the user object directly
-//            }
-//        }
-//        def topicSubscribers = subscribedUsers.collect { user ->
-//            def publicTopicCount = Topic.createCriteria().count {
-//                eq("createdBy", user)
-//                eq("visibility", LinkSharing.Topic.Visibility.PUBLIC)  // Use fully-qualified enum reference
-//                eq("isDeleted", false)
-//            }
-//
-//            def publicPostCount = LS_Resource.createCriteria().count {
-//                eq("createdBy", user)
-//                eq("isDeleted", false)
-//                topic {
-//                    eq("visibility", LinkSharing.Topic.Visibility.PUBLIC)  // Same for nested topic
-//                }
-//            }
-//
-//            return [
-//                    user: user,
-//                    publicTopicCount: publicTopicCount,
-//                    publicPostCount: publicPostCount
-//            ]
-//        }
-
-        render(view: 'Topic', model: [
-                userTopic               : userTopic,
-                activeSubscriptionCount: activeSubscriptionCount,
-                activeResourceCount    : activeResourceCount,
-                userSubscription       : userSubscription,
-                topicSubscribers: topicSubscribers,
-                subscribedTopics: subscribedTopics,
-                resources: resources
-        ])
+        render(view: 'Topic', model: topicData)
     }
 }

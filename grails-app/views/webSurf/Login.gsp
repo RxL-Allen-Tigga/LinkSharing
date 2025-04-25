@@ -136,7 +136,7 @@ body {
                                 </div>
 
                                 <div class="row">
-                                    <p>${resource.description}</p>
+                                    <p>${resource.description?.split(' ')?.take(30)?.join(' ')}...</p>
                                 </div>
                             </div>
 
@@ -195,7 +195,7 @@ body {
                             </div>
                             <br>
                             <div class="row">
-                                <p>${item.resource.description}</p>
+                                <p>${item.resource?.description?.split(' ')?.take(30)?.join(' ')}...</p>
                             </div>
                             <div class="row">
                                 <div class="col">
