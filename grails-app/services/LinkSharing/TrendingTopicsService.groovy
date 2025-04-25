@@ -64,56 +64,39 @@ import org.hibernate.criterion.CriteriaSpecification
 class TrendingTopicsService {
 
     def getPublicTopicsWithStats(LS_User sessionUser) {
-        def results = Topic.createCriteria().list {
-            eq("isDeleted", false)                  // Only non-deleted topics
-            eq("visibility", Topic.Visibility.PUBLIC) // Only public topics
+        def topicIds = Topic.createCriteria().list {
+            eq("isDeleted", false)
+            eq("visibility", Topic.Visibility.PUBLIC)
 
-            createAlias("subscription", "s", CriteriaSpecification.LEFT_JOIN)
-            createAlias("resource", "r", CriteriaSpecification.LEFT_JOIN)
-
-            // Apply filters to count only non-deleted subscriptions and resources (posts)
             projections {
-                groupProperty("id")                 // 0: topicId
-                groupProperty("name")               // 1: topicName
-                countDistinct("s.id", "subscriptionCount") // 2: count of non-deleted subscriptions
-                countDistinct("r.id", "resourceCount")    // 3: count of non-deleted posts/resources
+                property("id")
             }
-
-            // Order by non-deleted post count (resourceCount) in descending order
-            order("resourceCount", "desc")  // Order by resource count (active posts) in descending order
-            order("name", "asc")            // Optional: order by topic name in ascending order
         }
 
-        results.collect { row ->
-            def topicId = row[0]
-            def topicName = row[1]  // Now available
-            def subscriptionCount = row[2]
-            def resourceCount = row[3]
-
+        def results = topicIds.collect { topicId ->
             Topic topic = Topic.get(topicId)
 
-            // Check if the session user is subscribed to this topic
+            // Count only non-deleted subscriptions
+            def subscriptionCount = Subscription.countByTopicAndIsDeleted(topic, false)
+
+            // Count only non-deleted posts (resources)
+            def resourceCount = LS_Resource.countByTopicAndIsDeleted(topic, false)
+
+            // Check if the user is subscribed
             Subscription subscription = Subscription.findByUserAndTopicAndIsDeleted(sessionUser, topic, false)
             boolean isSubscribed = subscription != null
 
-            // Adjust the count to exclude deleted subscriptions or posts
-            def adjustedSubscriptionCount = Subscription.countByTopicAndIsDeletedAndUserIsNotNull(topic, false)
-            def adjustedResourceCount = LS_Resource.countByTopicAndIsDeleted(topic, false)
-
-            def result = [
+            return [
                     topic            : topic,
-                    subscriptionCount: adjustedSubscriptionCount,
-                    resourceCount    : adjustedResourceCount,
+                    subscriptionCount: subscriptionCount,
+                    resourceCount    : resourceCount,
                     isSubscribed     : isSubscribed,
                     subscription     : subscription
             ]
-
-//            println "Topic: ${topic.name} (ID: ${topic.id}), Subscription Count: ${adjustedSubscriptionCount}, " +
-//                    "Resource Count: ${adjustedResourceCount}, Is Subscribed: ${isSubscribed}" +
-//                    (isSubscribed ? ", Subscription ID: ${subscription?.id}, Seriousness: ${subscription?.seriousness}" : "")
-
-            return result
         }
+
+        // Sort in memory by active post count (descending)
+        return results.sort { -it.resourceCount }
     }
 }
 
