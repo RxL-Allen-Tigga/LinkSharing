@@ -1,40 +1,35 @@
-<div class="modal fade" id="Send_Invitation" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Send Invitation</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="modal-form-group ">
-                    <label for="exampleFirstName">Email*</label>
-                    <input type="text" class="form-control" id="exampleFirstName" placeholder="Email">
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="col-2">
-                    Topic*
+<form action="/sendInvitation/SendTopicInvitation" method="POST">
+    <div class="modal fade" id="Send_Invitation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Send Invitation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="col">
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Topic
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Private</a></li>
-                        <li><a class="dropdown-item" href="#">Public</a></li>
-                    </ul>
+                <div class="modal-body">
+                    <div class="modal-form-group">
+                        <label for="email">Email*</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="topicSelect">Topic*</label>
+                        <select name="topicId" class="form-select" id="SelectTopic" required>
+                            <g:each in="${subscribedTopics}" var="topic">
+                                <option value="${topic.id}">${topic.name} (${topic.visibility})</option>
+                            </g:each>
+                        </select>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary">Invite</button>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Invite</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 
 <script>
     function loadShareLinkModal() {
@@ -75,7 +70,8 @@
 
                     <div class="modal-form-group ">
                         <label for="exampleFirstName">Description*</label>
-                        <textarea name="description" class="form-control" id="exampleFormControlTextarea1_temp" rows="10" required></textarea>
+                        <textarea name="description" class="form-control" id="exampleFormControlTextarea1_temp"
+                                  rows="10" required></textarea>
                     </div>
 
                     <div class="mb-3">
@@ -109,7 +105,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Document</label>
-                        <input class="form-control" type="file" id="formFile" name="documentFile" accept=".pdf,.doc,.docx" required>
+                        <input class="form-control" type="file" id="formFile" name="documentFile"
+                               accept=".pdf,.doc,.docx" required>
                     </div>
 
                     <div class="modal-form-group">
