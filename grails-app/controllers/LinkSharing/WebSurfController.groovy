@@ -45,19 +45,21 @@ class WebSurfController {
         render(view: 'AdminPost', model: result)
     }
 
-    def Dashboard() {
+    def dashboard() {
         def sessionUser = session.user
-        if (!session.user) {
+        if (!sessionUser) {
             redirect(controller: "webSurf", action: "Login")
             return
         }
-        def dashboardData = dashboardMiscellaneousService.getDashboardData(session.user)
 
-//        Trending Topics Data (Top Trending Topics)
-        def trendingtopicDataList = trendingTopicsService.getPublicTopicsWithStats(session.user)
+        // Fetch the dashboard data and subscribed topics data
+        def dashboardData = dashboardMiscellaneousService.getDashboardData(sessionUser)
+        def subscribedTopicsData = dashboardMiscellaneousService.getSubscribedTopicsWithCounts(sessionUser)
 
+        // Merge the data and render the view
         render(view: 'Dashboard', model: dashboardData + [
-                trendingtopicDataList: trendingtopicDataList
+                trendingtopicDataList: trendingTopicsService.getPublicTopicsWithStats(sessionUser),
+                subscribedTopicsData: subscribedTopicsData
         ])
     }
 

@@ -5,8 +5,46 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class DashboardMiscellaneousService {
 
+    // Fetch subscribed topics with active subscriber count and active resource count
+    def getSubscribedTopicsWithCounts(LS_User user) {
+        // Fetch subscriptions of the current user where the topic and subscription are not deleted
+        def resultList = Subscription.createCriteria().list() {
+            eq("user", user)
+            eq("isDeleted", false)
+
+            createAlias("topic", "t")
+            eq("t.isDeleted", false)
+        }
+
+        // Collecting the data with active subscriber count and active resource count
+        def sortedSubscriptions = resultList.sort { sub ->
+            def latestDate = LS_Resource.createCriteria().get {
+                eq("topic", sub.topic)
+                eq("isDeleted", false)
+                projections {
+                    max("dateCreated")
+                }
+            }
+            return latestDate ? -latestDate.time : Long.MAX_VALUE  // Sort nulls last
+        }
+
+        def subscribedTopicsData = sortedSubscriptions.collect { subscription ->
+            def topic = subscription.topic
+
+            def activeSubscribersCount = Subscription.countByTopicAndIsDeleted(topic, false)
+            def activeResourcesCount = LS_Resource.countByTopicAndIsDeleted(topic, false)
+
+            return [
+                    subscription: subscription,
+                    activeSubscribersCount: activeSubscribersCount,
+                    activeResourcesCount: activeResourcesCount
+            ]
+        }
+    }
+
+    // Fetch data for the entire dashboard
     def getDashboardData(user) {
-//        Navbar Modals Data
+        // Navbar Modals Data
         def subscribedTopics = Subscription.createCriteria().list {
             eq("user", user)
             eq("isDeleted", false)
@@ -15,7 +53,7 @@ class DashboardMiscellaneousService {
             }
         }*.topic
 
-//         Session user subscriptions data (Your Subscriptions)
+        // Session user subscriptions data (Your Subscriptions)
         def subscriptions = Subscription.createCriteria().list {
             eq('user', user)
             eq("isDeleted", false)
@@ -25,7 +63,7 @@ class DashboardMiscellaneousService {
         }
 
         subscriptions = subscriptions.sort { sub ->
-            // Find latest active post in the topic
+            // Find the latest active post in the topic
             def latestPost = LS_Resource.createCriteria().get {
                 eq("topic", sub.topic)
                 eq("isDeleted", false)
@@ -36,76 +74,8 @@ class DashboardMiscellaneousService {
 
             return latestPost ? -latestPost.time : Long.MIN_VALUE
         }
-// Step 1: Retrieve recent resources (sorted by creation date)
-        def recentResources = LS_Resource.createCriteria().list {
-            eq("isDeleted", false)
-            topic {
-                eq("isDeleted", false)
-            }
-            order("dateCreated", "desc")
-        }
 
-// Step 2: Collect topics based on resources (to preserve order of recent activity)
-        def seenTopicIds = new HashSet<Long>()
-        def topicsWithPosts = []
-
-        recentResources.each { resource ->
-            def topic = resource.topic
-            if (!seenTopicIds.contains(topic.id)) {
-                seenTopicIds << topic.id
-                def subscription = Subscription.findByTopicAndIsDeleted(topic, false)
-                topicsWithPosts << [
-                        topic      : topic,
-                        latestPost : resource,
-                        postCount  : LS_Resource.countByTopicAndIsDeleted(topic, false),
-                        subCount   : Subscription.countByTopicAndIsDeleted(topic, false),
-                        subscription: subscription // Add subscription object
-                ]
-            }
-        }
-
-// Step 3: Find all non-deleted topics and filter out the ones already seen (i.e., topics with no posts)
-        def topicsWithoutPosts = Topic.createCriteria().list {
-            eq("isDeleted", false)
-            not {
-                'in'("id", seenTopicIds.toList())
-            }
-            order("dateCreated", "desc") // optional: can sort by topic creation
-        }.collect { topic ->
-            def subscription = Subscription.findByTopicAndIsDeleted(topic, false)
-            [
-                    topic      : topic,
-                    latestPost : null,
-                    postCount  : 0,
-                    subCount   : Subscription.countByTopicAndIsDeleted(topic, false),
-                    subscription: subscription // Add subscription object
-            ]
-        }
-
-// Step 4: Combine both
-        def finalOrderedTopics = topicsWithPosts + topicsWithoutPosts
-
-// Step 5: Print
-        finalOrderedTopics.eachWithIndex { data, idx ->
-            println """
-${idx + 1}. Topic: ${data.topic.name}
-   ID            : ${data.topic.id}
-   Created By    : ${data.topic.createdBy.username}
-   Posts         : ${data.postCount}
-   Subscribers   : ${data.subCount}
-   ${data.latestPost ? """
-   Latest Post   : "${data.latestPost.description}"
-   Posted At     : ${data.latestPost.dateCreated}
-   Post Author   : ${data.latestPost.createdBy.username}
-   """ : "No Posts"}
-   Subscription ID : ${data.subscription?.id ?: 'No Subscription'}
-   Subscription Seriousness : ${data.subscription?.seriousness ?: 'No Seriousness'}
-"""
-        }
-
-
-
-//        Inbox A.K.A unread items data (Your Inbox)
+        // Inbox A.K.A unread items data (Your Inbox)
         def totalUnread = ReadingItem.createCriteria().list {
             eq('user', user)
             eq('isRead', false)
@@ -127,6 +97,7 @@ ${idx + 1}. Topic: ${data.topic.name}
             eq("isDeleted", false)
             order("name", "asc")
         }
+
         def userSubscribedTopicsCount = Topic.createCriteria().count {
             createAlias("subscription", "s")
             eq("s.user", user)
@@ -140,6 +111,7 @@ ${idx + 1}. Topic: ${data.topic.name}
             eq("isDeleted", false)
             order("name", "asc")
         }
+
         def userCreatedTopicsCount = Topic.createCriteria().count {
             eq("createdBy", user)
             eq("isDeleted", false)
@@ -152,8 +124,7 @@ ${idx + 1}. Topic: ${data.topic.name}
                 userSubscribedTopics: userSubscribedTopics,
                 userSubscribedTopicsCount: userSubscribedTopicsCount,
                 userCreatedTopics: userCreatedTopics,
-                userCreatedTopicsCount: userCreatedTopicsCount,
-                finalOrderedTopics:finalOrderedTopics
+                userCreatedTopicsCount: userCreatedTopicsCount
         ]
     }
 }

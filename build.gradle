@@ -73,12 +73,13 @@ dependencies {
     implementation("org.hibernate:hibernate-core:5.4.22.Final")
     implementation 'org.grails:grails-datastore-gorm-hibernate5'
     implementation group: 'org.codehaus.groovy', name: 'groovy-dateutil', version: '3.0.13'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    implementation 'org.grails.plugins:mail:3.0.0'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-mail'
 //    implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
-    implementation 'com.sun.mail:jakarta.mail:2.0.1'
-
-    implementation 'org.eclipse.angus:angus-mail:2.0.2' // Needed implementation for javax.mail-like behavior
+//    implementation 'com.sun.mail:jakarta.mail:2.0.1'
+//    implementation 'org.eclipse.angus:angus-mail:2.0.2' // Needed implementation for javax.mail-like behavior
 }
 
 application {

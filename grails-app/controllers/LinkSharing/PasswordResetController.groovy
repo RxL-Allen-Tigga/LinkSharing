@@ -1,41 +1,32 @@
 package LinkSharing
 
-import grails.gorm.transactions.Transactional
-import jakarta.mail.internet.MimeMessage
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.mail.javamail.JavaMailSender
-import org.springframework.mail.javamail.MimeMessageHelper
-import org.springframework.stereotype.Controller
-
-@Controller  // <-- Ensure this or make it a Grails controller
 class PasswordResetController {
 
-    @Autowired
-    JavaMailSender javaMailSender  // No @Autowired, Grails will inject
+    EmailOperationsService emailOperationsService // Injecting EmailOperationsService
 
     def forgotPassword() {
-        def email = params.email
-        def user = LS_User.findByEmail(email)
+        println "EmailOperationsService available: ${emailOperationsService != null}"
 
-        if (user) {
-            try {
-                MimeMessage message = javaMailSender.createMimeMessage()
-                MimeMessageHelper helper = new MimeMessageHelper(message, true)
-
-                helper.setTo(user.email)
-                helper.setSubject("Your Password")
-                helper.setText("Hi ${user.firstName},\n\nYour password is: ${user.password}\n\nLinkSharing Team")
-
-                javaMailSender.send(message)
-
-                flash.message = "Password has been sent to your email."
-            } catch (Exception e) {
-                flash.message = "Error sending email: ${e.message}"
-            }
-        } else {
-            flash.message = "Email not found."
+        String email = params.email // Correctly retrieving email from the form
+        if (!email) {
+            flash.message = "Email is required."
+            redirect(uri: request.getHeader("referer") ?: "/")
+            return
         }
 
-        redirect(controller: 'webSurf', action: 'Login')
+        try {
+            // Call the correct service method to handle password reset email logic
+            boolean success = emailOperationsService.sendPasswordResetEmail(email)
+            if (success) {
+                flash.message = "Your password has been sent to your email."
+            }
+        } catch (IllegalArgumentException e) {
+            flash.message = e.message
+        } catch (Exception e) {
+            flash.message = "An error occurred while processing your request."
+            log.error("Error occurred in forgotPassword", e)
+        }
+
+        redirect(uri: request.getHeader("referer") ?: "/")
     }
 }
