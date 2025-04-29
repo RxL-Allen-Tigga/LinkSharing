@@ -5,8 +5,6 @@ class PasswordResetController {
     EmailOperationsService emailOperationsService // Injecting EmailOperationsService
 
     def forgotPassword() {
-        println "EmailOperationsService available: ${emailOperationsService != null}"
-
         String email = params.email // Correctly retrieving email from the form
         if (!email) {
             flash.message = "Email is required."
@@ -15,7 +13,6 @@ class PasswordResetController {
         }
 
         try {
-            // Call the correct service method to handle password reset email logic
             boolean success = emailOperationsService.sendPasswordResetEmail(email)
             if (success) {
                 flash.message = "Your password has been sent to your email."

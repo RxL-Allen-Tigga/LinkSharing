@@ -140,4 +140,20 @@ class WebSurfController {
         def topicData=topicMiscellaneousService.getTopicData(id,session.user)
         render(view: 'Topic', model: topicData)
     }
+    def ResetPassword() {
+        def token = params.token
+        if (!token) {
+            flash.error = "Invalid token."
+            redirect(controller: 'webSurf', action: 'dashboard')
+            return
+        }
+
+        def user = LS_User.findByPasswordResetToken(token)
+        if (!user) {
+            flash.error = "Invalid or expired token."
+            redirect(controller: 'webSurf', action: 'dashboard')
+            return
+        }
+        [token: token]
+    }
 }

@@ -14,19 +14,31 @@ class EmailOperationsService {
             throw new IllegalArgumentException("Email is required.")
         }
 
+        // Find the user by email
         LS_User user = LS_User.findByEmail(email)
         if (user) {
-            String password = user.password
+            def token = UUID.randomUUID().toString()
+
+            user.passwordResetToken = token
+            user.save(flush: true)
+
+            def resetLink = grailsLinkGenerator.link(
+                    controller: 'webSurf',
+                    action: 'ResetPassword',
+                    params: [token: token],
+                    absolute: true
+            )
 
             mailService.sendMail {
-                to user.email
-                subject "Your Password"
+                to email
+                subject "Password Reset Request"
                 html """
-                    <p>Your password for the LinkSharing system is:</p>
-                    <p><strong>${password}</strong></p>
-                    <p>For security reasons, we recommend you change your password after logging in.</p>
+                    <p>You have requested to reset your password for the LinkSharing system.</p>
+                    <p><a href="${resetLink}">Click here to reset your password</a></p>
+                    <p>If you did not request a password reset, please ignore this email.</p>
                 """
             }
+
             return true
         } else {
             throw new IllegalArgumentException("No user found with that email address.")

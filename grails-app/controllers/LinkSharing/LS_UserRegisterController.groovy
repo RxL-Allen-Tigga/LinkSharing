@@ -224,5 +224,36 @@ class LS_UserRegisterController {
         }
         redirect(controller: "webSurf", action: "Admin")
     }
+    def resetPassword() {
+        def token = params.token
+        def newPassword = params.newPassword
+        def confirmPassword = params.confirmPassword
 
+        if (newPassword != confirmPassword) {
+            flash.error = "Passwords do not match."
+            redirect(controller: 'webSurf', action: 'resetPassword', params: [token: token])
+            return
+        }
+        if (confirmPassword.length() < 6) {
+            flash.message = "Password must be at least 6 characters"
+            redirect(controller: 'webSurf', action: 'resetPassword', params: [token: token])
+            return
+        }
+
+        // Find the user using the reset token
+        def user = LS_User.findByPasswordResetToken(token)
+        if (!user) {
+            flash.error = "Invalid or expired token."
+            redirect(controller: 'webSurf', action: 'Login')
+            return
+        }
+
+        // Set the new password and clear the reset token
+        user.password = newPassword
+        user.passwordResetToken = null  // Clear the token
+        user.save(flush: true)
+
+        flash.message = "Your password has been successfully updated."
+        redirect(controller: 'webSurf', action: 'Login')
+    }
 }
