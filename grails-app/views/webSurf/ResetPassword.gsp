@@ -178,12 +178,12 @@ body {
                 <form action="/LS_UserRegister/resetPassword" method="POST">
                     <input type="hidden" name="token" value="${token}" />  <!-- Pass the token as a hidden field -->
                     <div class="form-group">
-                        <label for="newPassword">New Password*</label>
+                        <label for="newPassword">New Password<span style="color: red;">*</span></label>
                         <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required maxlength="250">
                     </div>
 
                     <div class="form-group">
-                        <label for="confirmPassword">Confirm Password*</label>
+                        <label for="confirmPassword">Confirm Password<span style="color: red;">*</span></label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required maxlength="250">
                     </div>
                     <br>

@@ -60,7 +60,7 @@ body {
                     <input type="hidden" id="edit-topic-id" name="id">
 
                     <div class="modal-form-group">
-                        <label for="edit-topic-name">Topic Name*</label>
+                        <label for="edit-topic-name">Topic Name<span style="color: red;">*</span></label>
                         <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
                                required maxlength="250">
                     </div>
@@ -95,7 +95,7 @@ body {
                     <input type="hidden" id="edit-resource-id" name="id">
 
                     <div class="modal-form-group">
-                        <label for="edit-resource-description">Description*</label>
+                        <label for="edit-resource-description">Description<span style="color: red;">*</span></label>
                         <textarea class="form-control" id="edit-resource-description" name="description" rows="4"
                                   placeholder="Enter new description..." required></textarea>
                     </div>

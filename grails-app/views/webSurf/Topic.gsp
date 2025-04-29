@@ -51,7 +51,7 @@ body {
                     <input type="hidden" id="edit-topic-id" name="id">
 
                     <div class="modal-form-group">
-                        <label for="edit-topic-name">Topic Name*</label>
+                        <label for="edit-topic-name">Topic Name<span style="color: red;">*</span></label>
                         <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
                                required>
                     </div>
@@ -94,6 +94,7 @@ body {
             <div class="row">
                 <div class="col">
                 </div>
+
                 <div class="col-1">
                     <g:link controller="webSurf" action="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
@@ -102,6 +103,7 @@ body {
                         </svg>
                     </g:link>
                 </div>
+
                 <div class="col-1">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#Share_Link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" fill="currentColor"
@@ -174,6 +176,7 @@ body {
             </div>
         </g:if>
     </div>
+
     <div class="row align-items-start mt-5">
         <div class="col">
             <div class="col border rounded border-dark p-2 mb-2 text-bg-light">
@@ -300,10 +303,14 @@ body {
 
                             <div class="col-2">
                                 <g:if test="${userSubscription}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
-                                         class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
-                                    </svg>
+                                    <a href="#" class="svg-link" data-bs-toggle="modal"
+                                       data-bs-target="#Send_Invitation">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
+                                             fill="currentColor"
+                                             class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                            <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+                                        </svg>
+                                    </a>
                                 </g:if>
                             </div>
                         </div>
@@ -380,10 +387,12 @@ body {
                             </g:link>
                         </div>
                         <br>
+
                         <div class="row">
                             ${resource.description}
                         </div>
                         <br>
+
                         <div class="row">
                             <div class="row">
                                 <div class="col">
@@ -402,6 +411,7 @@ body {
                                         </a>
                                     </g:if>
                                 </div>
+
                                 <div class="col">
                                     <g:link controller="webSurf" action="Post"
                                             params="[id: resource.id]">

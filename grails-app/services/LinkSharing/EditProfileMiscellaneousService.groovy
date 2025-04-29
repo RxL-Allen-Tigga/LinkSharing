@@ -6,6 +6,13 @@ import grails.gorm.transactions.Transactional
 class EditProfileMiscellaneousService {
 
     def getEditProfileData(user) {
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", user)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
         // Subscribed Topics Data (Your Profile)
         def userSubscribedTopics = Topic.createCriteria().list {
             createAlias("subscription", "s")
@@ -43,11 +50,12 @@ class EditProfileMiscellaneousService {
         }
 
         return [
-                userSubscribedTopics      : userSubscribedTopics,
-                userSubscribedTopicsCount : userSubscribedTopicsCount,
-                userCreatedTopics         : userCreatedTopics,
-                userCreatedTopicsCount    : userCreatedTopicsCount,
-                subscriptions             : subscriptions
+                userSubscribedTopics     : userSubscribedTopics,
+                userSubscribedTopicsCount: userSubscribedTopicsCount,
+                userCreatedTopics        : userCreatedTopics,
+                userCreatedTopicsCount   : userCreatedTopicsCount,
+                subscriptions            : subscriptions,
+                subscribedTopics         : subscribedTopics
         ]
     }
 }

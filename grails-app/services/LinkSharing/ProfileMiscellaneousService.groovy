@@ -75,7 +75,7 @@ class ProfileMiscellaneousService {
                     topic          : topic,
                     sessionUserSub : sessionUserSub,
                     activeSubCount : activeSubCount,
-                    activePostCount: activePostCount
+                    activePostCount: activePostCount,
             ]
         }
 
@@ -85,6 +85,15 @@ class ProfileMiscellaneousService {
             eq("isDeleted", false)
             order("dateCreated", "desc")
         }
+
+        def subscribedTopics = Subscription.createCriteria().list {
+            eq("user", user)
+            eq("isDeleted", false)
+            topic {
+                eq("isDeleted", false)
+            }
+        }*.topic
+
         return [
                 id                       : id,
                 userProfile              : userProfile,
@@ -92,7 +101,8 @@ class ProfileMiscellaneousService {
                 userCreatedTopicsCount   : userCreatedTopicsCount,
                 userCreatedTopics        : userCreatedTopics,
                 subscriptionData         : subscriptionData,
-                resources                : resources
+                resources                : resources,
+                subscribedTopics :subscribedTopics
         ]
     }
 }

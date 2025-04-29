@@ -80,13 +80,14 @@ class LS_UserRegisterController {
 
         def user = LS_User.findByEmailAndPassword(email, password)
         if(user?.isDeleted){
-            flash.message = "Your Account is Inactive, contact Admin at allen.tigga@rxlogix.com"
+            flash.message = "Your Account is Inactive, contact Admin at nightknight237@gmail.com"
             redirect(controller: 'webSurf', action: 'Login')
+            return
         }
         if (user) {
             session.user = user
             flash.message = "Welcome, ${user.email}!"
-            redirect(controller: 'webSurf', action: 'Dashboard')
+            redirect(controller: 'webSurf', action: 'dashboard')
         } else {
             flash.message = "Invalid email or password."
             redirect(controller: 'webSurf', action: 'Login')

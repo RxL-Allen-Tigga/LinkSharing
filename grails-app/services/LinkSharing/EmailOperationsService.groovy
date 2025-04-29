@@ -36,6 +36,7 @@ class EmailOperationsService {
                     <p>You have requested to reset your password for the LinkSharing system.</p>
                     <p><a href="${resetLink}">Click here to reset your password</a></p>
                     <p>If you did not request a password reset, please ignore this email.</p>
+                    <p>Best regards,<br>LinkSharing Team</p>
                 """
             }
 
@@ -56,7 +57,8 @@ class EmailOperationsService {
             // Save invitation token
             def invitation = new Invitation(email: email, token: token, topic: topic)
             if (!invitation.save(flush: true)) {
-                return [success: false, message: "Failed to save invitation: ${invitation.errors}"]
+//                return [success: false, message: "Failed to save invitation: ${invitation.errors}"]
+                return [success: false, message: "Failed to save invitation due to invalid data."]
             }
 
             // Generate link
@@ -74,7 +76,8 @@ class EmailOperationsService {
                 html """
                 <p>You have been invited to join the topic <strong>${topic.name}</strong> on LinkSharing.</p>
                 <p><a href="${invitationLink}">Click here to subscribe</a></p>
-                <p>Best regards,<br>Your Platform Team</p>
+                <p>Register or log in to access this invite.</p>
+                <p>Best regards,<br>LinkSharing Team</p>
             """
             }
 
