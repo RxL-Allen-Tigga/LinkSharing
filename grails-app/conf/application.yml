@@ -12,8 +12,8 @@ dataSource:
   password: 'linksharing123'
   pooled: true
   jmxExport: true
-#  dbCreate: update
-  dbCreate: create-drop
+  dbCreate: update
+#  dbCreate: create-drop
 
 document:
   upload:

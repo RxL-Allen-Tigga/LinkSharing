@@ -125,7 +125,8 @@ class WebSurfController {
 
         def subscription = Subscription.findByUserAndTopic(session.user, topic)
 
-        if(topic.visibility == 'PRIVATE'){
+        if(topic.visibility == LinkSharing.Topic.Visibility.PRIVATE){
+//        if(topic.visibility == 'PRIVATE'){
             def token = params.token
             def invitation = Invitation.findByToken(token)
             if (!subscription) {
