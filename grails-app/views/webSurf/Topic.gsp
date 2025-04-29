@@ -328,7 +328,7 @@ body {
                 <hr>
                 <g:each in="${topicSubscribers}" var="entry">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-2">
                             <img src="data:image/jpeg;base64,${entry.user.photo?.encodeBase64()?.toString()}"
                                  alt="Profile Image" width="100%" height="auto">
                         </div>
@@ -374,7 +374,7 @@ body {
             <hr>
             <g:each in="${resources}" var="resource">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
                              alt="User Photo" width="100%" height="auto">
                     </div>

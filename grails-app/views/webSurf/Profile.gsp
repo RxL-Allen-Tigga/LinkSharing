@@ -168,7 +168,7 @@ body {
                 </div>
 
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-3">
                         <img src="data:image/jpeg;base64,${userProfile?.photo ? userProfile?.photo.encodeBase64() : ''}"
                              alt="User Photo" width="100%" height="auto">
                     </div>
@@ -222,7 +222,7 @@ body {
                     <g:if test="${topic.visibility == LinkSharing.Topic.Visibility.PUBLIC ||
                             session.user.admin || userProfile.id == session.user.id}">
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <img src="data:image/jpeg;base64,${userProfile?.photo ? userProfile?.photo.encodeBase64() : ''}"
                                      alt="User Photo" width="100%" height="auto">
                             </div>
@@ -382,7 +382,7 @@ body {
                     <g:if test="${topic.visibility == LinkSharing.Topic.Visibility.PUBLIC ||
                             session.user.admin || userProfile.id == session.user.id}">
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <img src="data:image/jpeg;base64,${topic.createdBy?.photo ? topic.createdBy?.photo.encodeBase64() : ''}"
                                      alt="User Photo" width="100%" height="auto">
                             </div>

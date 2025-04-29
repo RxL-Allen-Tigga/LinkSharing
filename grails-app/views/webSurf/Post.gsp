@@ -221,7 +221,7 @@ body {
                 <hr>
 
                 <div class="row ">
-                    <div class="col-3">
+                    <div class="col-4">
                         <img src="data:image/jpeg;base64,${resource.createdBy?.photo?.encodeBase64()?.toString()}"
                              alt="Profile Image" width="100%" height="auto">
                     </div>
