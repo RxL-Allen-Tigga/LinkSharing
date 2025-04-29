@@ -17,6 +17,11 @@ body {
     background-attachment: fixed;
 }
 
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 .sortable {
     cursor: pointer;
 }
@@ -120,7 +125,7 @@ body {
                 <hr>
                 <g:each in="${resourcex}" var="resource">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-2">
                             <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
                                  alt="User Photo" width="100%" height="auto">
                         </div>
@@ -137,8 +142,8 @@ body {
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <p>${resource.description?.split(' ')?.take(30)?.join(' ')}...</p>
+                                <div class="row break-word">
+                                    <p>${resource.description?.take(180)}</p>
                                 </div>
                             </div>
 
@@ -175,7 +180,7 @@ body {
                     </div>
                     <hr>
                     <g:each in="${topResourcesWithAvg}" var="item">
-                        <div class="col-3">
+                        <div class="col-2">
                             <img src="data:image/jpeg;base64,${item.resource?.createdBy?.photo ? item.resource?.createdBy?.photo.encodeBase64() : ''}"
                                  alt="User Photo" width="100%" height="auto">
                         </div>
@@ -196,8 +201,8 @@ body {
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
-                                <p>${item.resource?.description?.split(' ')?.take(30)?.join(' ')}...</p>
+                            <div class="row break-word">
+                                <p>${item.resource?.description?.take(180)}</p>
                             </div>
                             <div class="row">
                                 <div class="col">

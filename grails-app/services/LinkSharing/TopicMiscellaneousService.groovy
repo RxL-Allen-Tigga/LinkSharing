@@ -78,7 +78,7 @@ class TopicMiscellaneousService {
     }
     def grailsApplication
 
-    def createDocumentResource(MultipartFile file, String description, Long topicId, LS_User user) {
+    def createDocumentResource(MultipartFile file, def description, Long topicId, LS_User user) {
         Topic topic = Topic.get(topicId)
         if (!topic) {
             return [success: false, message: "Invalid topic."]

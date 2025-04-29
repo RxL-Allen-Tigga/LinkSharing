@@ -17,7 +17,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
-
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 .sortable {
     cursor: pointer;
 }
@@ -546,7 +550,7 @@ body {
                 <g:each in="${resources}" var="resource">
                     <g:if test="${resource.topic.visibility == 'PUBLIC' || resource.createdBy.id == session.user.id || session?.user?.admin == true}">
                         <g:if test="${!resource.isDeleted && !resource.topic.isDeleted}">
-                            <div class="row p-2 mb-2">
+                            <div class="row">
                                 <div class="col-2">
                                     <img src="data:image/jpeg;base64,${resource.createdBy?.photo ? resource.createdBy?.photo.encodeBase64() : ''}"
                                          alt="User Photo" width="100%" height="auto">
@@ -572,8 +576,8 @@ body {
                                     </div>
 
 
-                                    <div class="row">
-                                        <p>${resource.description}</p>
+                                    <div class="row break-word">
+                                        <p>${resource.description?.take(180)}</p>
                                     </div>
 
                                     <div class="row">

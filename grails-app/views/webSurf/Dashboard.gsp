@@ -17,6 +17,12 @@ body {
     background-attachment: fixed;
 }
 
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
+
 .sortable {
     cursor: pointer;
 }
@@ -39,7 +45,7 @@ body {
 
 <body>
 %{--<Header:navbar username="${session.user?.username}"/>--}%
-<div class="container-fluid sticky-top bg-light shadow">
+<div class="container-fluid sticky-top bg-light shadow ">
     <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
         <div class="col-4">
             <div class="row">
@@ -112,7 +118,7 @@ body {
                     </a>
                 </div>
 
-                <div class="col-2 dropdown">
+                <div class="col-2 dropdown break-word">
                     <!-- User dropdown -->
                     <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
@@ -1167,8 +1173,8 @@ body {
                             </div>
 
 
-                            <div class="row">
-                                <p>${totalunread.resource.description}</p>
+                            <div class="row break-word">
+                                <p>${totalunread.resource?.description?.take(180)}</p>
                             </div>
 
                             <div class="row">

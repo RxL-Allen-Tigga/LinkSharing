@@ -16,7 +16,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
-
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 .sortable {
     cursor: pointer;
 }
@@ -386,12 +390,10 @@ body {
                                 <h6>@${resource.createdBy.username}</h6>
                             </g:link>
                         </div>
-                        <br>
 
-                        <div class="row">
-                            ${resource.description}
+                        <div class="row break-word">
+                            <p>${resource.description?.take(180)}</p>
                         </div>
-                        <br>
 
                         <div class="row">
                             <div class="row">

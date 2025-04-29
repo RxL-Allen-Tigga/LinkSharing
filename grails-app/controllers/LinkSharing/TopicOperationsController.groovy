@@ -52,7 +52,7 @@ class TopicOperationsController {
             }
 
             def file = request.getFile('documentFile')
-            String description = params.description
+            def description = params.description
             Long topicId = params.long('topicId')
 
             // Validate file extension

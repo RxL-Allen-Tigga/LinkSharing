@@ -16,7 +16,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
-
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 .sortable {
     cursor: pointer;
 }
@@ -329,7 +333,7 @@ body {
                     <p>Description:</p>
                 </div>
 
-                <div class="row">
+                <div class="row break-word">
                     <p>${resource.description}</p>
                 </div>
 
