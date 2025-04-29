@@ -122,7 +122,7 @@ body {
                     <div class="modal-form-group">
                         <label for="edit-topic-name">Topic Name*</label>
                         <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
-                               required>
+                               required maxlength="250">
                     </div>
                 </div>
 
@@ -263,12 +263,6 @@ body {
                     </div>
 
                     <div class="col">
-                        <div class="input-group">
-                            <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><h5>Search</h5>
-                            </button>
-                            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                                   aria-describedby="search-addon"/>
-                        </div>
                     </div>
                 </div>
                 <hr>
@@ -407,21 +401,21 @@ body {
                         <label for="firstName">First Name</label>
                         <input type="text" name="firstName" id="firstName" class="form-control"
                                value="${userInstance?.firstName}"
-                               placeholder=${session.user.firstName} onfocus="enablePlaceholderEdit(this)">
+                               placeholder=${session.user.firstName} onfocus="enablePlaceholderEdit(this)" maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label for="lastName">Last Name</label>
                         <input type="text" name="lastName" id="lastName" class="form-control"
                                value="${userInstance?.lastName}"
-                               placeholder=${session.user.lastName} oninput="updatePlaceholder(this)">
+                               placeholder=${session.user.lastName} oninput="updatePlaceholder(this)" maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" class="form-control"
                                value="${userInstance?.username}"
-                               placeholder=${session.user.username} oninput="updatePlaceholder(this)">
+                               placeholder=${session.user.username} oninput="updatePlaceholder(this)" maxlength="250">
                     </div>
 
                     <div class="mb-3">
@@ -451,13 +445,13 @@ body {
                     <div class="form-group">
                         <label for="newPassword">New Password*</label>
                         <input type="password" class="form-control" id="newPassword" name="newPassword"
-                               placeholder="New Password" required>
+                               placeholder="New Password" required maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password*</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                               placeholder="Confirm Password" required>
+                               placeholder="Confirm Password" required maxlength="250">
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary">Update</button>

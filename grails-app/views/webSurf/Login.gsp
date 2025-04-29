@@ -86,7 +86,7 @@ body {
                                 id="forgotEmail"
                                 name="email"
                                 placeholder="you@example.com"
-                                required>
+                                required maxlength="250">
                     </div>
                 </div>
 
@@ -239,7 +239,7 @@ body {
                         </label>
                         <input type="email" name="email" class="form-control" id="exampleInputEmail1"
                                aria-describedby="emailHelp1"
-                               placeholder="Enter email" required>
+                               placeholder="Enter email" required maxlength="250">
                     </div>
 
                     <div class="form-group">
@@ -247,7 +247,7 @@ body {
                             Password<span style="color: red;">*</span>
                         </label>
                         <input type="password" name="password" class="form-control" id="exampleInputPassword1"
-                               placeholder="Password" required>
+                               placeholder="Password" required maxlength="250">
                     </div>
                     <br>
 
@@ -278,13 +278,13 @@ body {
                             First Name<span style="color: red;">*</span>
                         </label>
                         <input type="text" name="firstName" class="form-control" id="exampleFirstName"
-                               placeholder="First Name" required>
+                               placeholder="First Name" required maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label for="exampleLastName">Last Name</label>
                         <input type="text" name="lastName" class="form-control" id="exampleLastName"
-                               placeholder="Last Name">
+                               placeholder="Last Name" maxlength="250">
                     </div>
 
                     <div class="form-group ">
@@ -292,7 +292,7 @@ body {
                             Email address<span style="color: red;">*</span>
                         </label>
                         <input type="email" name="email" class="form-control" id="exampleInputEmail2"
-                               placeholder="Enter email" required>
+                               placeholder="Enter email" required maxlength="250">
                         <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone
                         else.</small>
                     </div>
@@ -302,7 +302,7 @@ body {
                             Username<span style="color: red;">*</span>
                         </label>
                         <input type="text" name="username" class="form-control" id="exampleUsername"
-                               placeholder="Username" required>
+                               placeholder="Username" required maxlength="250">
                     </div>
 
                     <div class="form-group">
@@ -310,7 +310,7 @@ body {
                             Password<span style="color: red;">*</span>
                         </label>
                         <input type="password" name="password" class="form-control" id="exampleInputPassword2"
-                               placeholder="Password" required>
+                               placeholder="Password" required maxlength="250">
                     </div>
 
                     <div class="form-group">
@@ -318,7 +318,7 @@ body {
                             Confirm Password<span style="color: red;">*</span>
                         </label>
                         <input type="password" name="confirmPassword" class="form-control" id="exampleInputPassword3"
-                               placeholder="Confirm Password" required>
+                               placeholder="Confirm Password" required maxlength="250">
                     </div>
 
                     <div class="mb-3">

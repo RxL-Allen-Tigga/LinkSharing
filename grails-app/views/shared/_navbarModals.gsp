@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <div class="modal-form-group">
                         <label for="email">Email*</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email" required>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email" required maxlength="250">
                     </div>
 
                     <div class="mb-3">
@@ -65,7 +65,7 @@
                 <div class="modal-body">
                     <div class="modal-form-group ">
                         <label for="exampleFirstName">Link*</label>
-                        <input name="link" type="text" class="form-control" id="Link1_temp" placeholder="Link" required>
+                        <input name="link" type="text" class="form-control" id="Link1_temp" placeholder="Link" required maxlength="250">
                     </div>
 
                     <div class="modal-form-group ">
@@ -146,7 +146,7 @@
                 <div class="modal-body">
                     <div class="modal-form-group">
                         <label for="Name1">Topic Name*</label>
-                        <input type="text" class="form-control" id="Name1" name="name" placeholder="Name" required>
+                        <input type="text" class="form-control" id="Name1" name="name" placeholder="Name" required maxlength="250">
                     </div>
                 </div>
 

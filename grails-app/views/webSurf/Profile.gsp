@@ -54,7 +54,7 @@ body {
                     <div class="modal-form-group">
                         <label for="edit-topic-name">Topic Name*</label>
                         <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
-                               required>
+                               required maxlength="250">
                     </div>
                 </div>
 

@@ -75,7 +75,7 @@ body {
                     <div class="modal-form-group">
                         <label for="edit-topic-name">Topic Name*</label>
                         <input type="text" class="form-control" id="edit-topic-name" name="name" placeholder="Name"
-                               required>
+                               required maxlength="250">
                     </div>
                 </div>
 
@@ -179,12 +179,12 @@ body {
                     <input type="hidden" name="token" value="${token}" />  <!-- Pass the token as a hidden field -->
                     <div class="form-group">
                         <label for="newPassword">New Password*</label>
-                        <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password" required maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password*</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required maxlength="250">
                     </div>
                     <br>
                     <button type="submit" class="btn btn-primary">Reset Password</button>
