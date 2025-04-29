@@ -519,10 +519,26 @@ body {
 
                         <div class="col">
                             <div class="row">
-                                <div class="col">
+                                <div class="col-9">
                                     <g:link controller="webSurf" action="Topic" params="[id: data.subscription?.topic?.id]">
                                         <h5>${data.subscription?.topic?.name}</h5>
                                     </g:link>
+                                </div>
+                                <div class="col">
+                                    <g:if test="${!data.subscription}">
+                                        <a class="link-opacity-60-hover"
+                                           href="${createLink(controller: 'modifySubscription',
+                                                   action: 'updateSubscribeTopic', params: [userid: session.user.id, topicid: data.subscription.topic.id])}">
+                                            Subscribe
+                                        </a>
+                                    </g:if>
+                                    <g:if test="${data.subscription && data.subscription.topic.createdBy.id != session.user.id}">
+                                        <a class="link-opacity-60-hover"
+                                           href="${createLink(controller: 'modifySubscription',
+                                                   action: 'updateUnsubscribeTopic', params: [userid: session.user.id, topicid: data.subscription.topic.id])}">
+                                            UnSubscribe
+                                        </a>
+                                    </g:if>
                                 </div>
                             </div>
 

@@ -118,7 +118,7 @@
                         <label for="topicSelect">Topic*</label>
                         <select name="topicId" class="form-select" id="topicSelect1" required>
                             <g:each in="${subscribedTopics}" var="topic">
-                                <option value="${topic.id}">${topic.name}</option>
+                                <option value="${topic.id}">${topic.name} (${topic.visibility})</option>
                             </g:each>
                         </select>
                     </div>
