@@ -144,14 +144,14 @@ class WebSurfController {
         def token = params.token
         if (!token) {
             flash.error = "Invalid token."
-            redirect(controller: 'webSurf', action: 'dashboard')
+            redirect(controller: 'webSurf', action: 'Login')
             return
         }
 
         def user = LS_User.findByPasswordResetToken(token)
         if (!user) {
             flash.error = "Invalid or expired token."
-            redirect(controller: 'webSurf', action: 'dashboard')
+            redirect(controller: 'webSurf', action: 'Login')
             return
         }
         [token: token]
