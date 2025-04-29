@@ -59,6 +59,16 @@
 <body>
 <!-- ✅ STICKY NAVBAR -->
 <div class="container-fluid sticky-top bg-light shadow">
+    <g:if test="${flash.message}">
+        <div class="alert alert-success" role="alert">
+            ${flash.message}
+        </div>
+    </g:if>
+    <g:if test="${flash.error}">
+        <div class="alert alert-danger" role="alert">
+            ${flash.error}
+        </div>
+    </g:if>
     <div class="row align-items-center text-bg-light p-3 border-dark">
         <div class="col-4">
             <a href="/webSurf/dashboard" class="text-primary text-decoration-underline">
