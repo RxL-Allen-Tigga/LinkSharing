@@ -115,8 +115,28 @@ class WebSurfController {
             redirect(controller: "webSurf", action: "Login")
             return // important to stop further execution
         }
-        def topicData=topicMiscellaneousService.getTopicData(id,session.user)
 
+        def topic = Topic.get(id)
+        if (!topic) {
+            flash.error = "Topic not found."
+            redirect(controller: 'webSurf', action: 'dashboard')
+            return
+        }
+
+        def subscription = Subscription.findByUserAndTopic(session.user, topic)
+
+        if(topic.visibility == 'PRIVATE'){
+            def token = params.token
+            def invitation = Invitation.findByToken(token)
+            if (!subscription) {
+                if(!invitation || invitation.topic.id != topic.id || invitation.email != session.user.email){
+                    flash.error = "You are not authorized to view this private topic."
+                    redirect(controller: 'webSurf', action: 'dashboard')
+                    return
+                }
+            }
+        }
+        def topicData=topicMiscellaneousService.getTopicData(id,session.user)
         render(view: 'Topic', model: topicData)
     }
 }

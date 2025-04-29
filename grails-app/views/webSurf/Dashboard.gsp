@@ -233,14 +233,16 @@ body {
 <g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>
 
 <div class="container">
-    <div>
-        <g:if test="${flash.message}">
-            <div class="alert alert-warning" role="alert">
-                ${flash.message}
-            </div>
-        </g:if>
-    </div>
-
+    <g:if test="${flash.message}">
+        <div class="alert alert-success" role="alert">
+            ${flash.message}
+        </div>
+    </g:if>
+    <g:if test="${flash.error}">
+        <div class="alert alert-danger" role="alert">
+            ${flash.error}
+        </div>
+    </g:if>
     <div class="row align-items-start mt-5">
         <div class="col ">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">

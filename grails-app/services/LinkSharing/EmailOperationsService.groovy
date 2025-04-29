@@ -1,11 +1,13 @@
 package LinkSharing
 
 import grails.gorm.transactions.Transactional
+import grails.web.mapping.LinkGenerator
 
 @Transactional
 class EmailOperationsService {
 
     def mailService // Injecting mailService into the service
+    LinkGenerator grailsLinkGenerator
 
     def sendPasswordResetEmail(String email) {
         if (!email) {
@@ -31,22 +33,44 @@ class EmailOperationsService {
         }
     }
 
-    def sendInvitation(String email, Long topicId, String token, String invitationLink) {
+    def sendInvitation(String email, Long topicId) {
         def topic = Topic.get(topicId)
-
-        // You can choose whether to save the token or store it in the database for tracking the invitation
-        mailService.sendMail {
-            to email
-            subject "You're invited to join a topic"
-            html """
-                <p>You have been invited to join the topic <strong>${topic.name}</strong> on LinkSharing.</p>
-                <p>If you're already registered, click the link below to subscribe:</p>
-                <a href="${invitationLink}">Click here to subscribe</a>
-                <p>If you're not registered yet, you will be prompted to create an account. After registration, you will automatically be subscribed to the topic.</p>
-                <p>Best regards,<br>Your Platform Team</p>
-            """
+        if (!topic) {
+            return [success: false, message: "Topic not found."]
         }
 
-        return topic // Return topic to track it in the controller if needed
+        def token = UUID.randomUUID().toString()
+        try {
+            // Save invitation token
+            def invitation = new Invitation(email: email, token: token, topic: topic)
+            if (!invitation.save(flush: true)) {
+                return [success: false, message: "Failed to save invitation: ${invitation.errors}"]
+            }
+
+            // Generate link
+            def invitationLink = grailsLinkGenerator.link(
+                    controller: 'webSurf',
+                    action: 'Topic',
+                    params: [id: topicId, token: token],
+                    absolute: true
+            )
+
+            // Send email
+            mailService.sendMail {
+                to email
+                subject "You're invited to join a topic"
+                html """
+                <p>You have been invited to join the topic <strong>${topic.name}</strong> on LinkSharing.</p>
+                <p><a href="${invitationLink}">Click here to subscribe</a></p>
+                <p>Best regards,<br>Your Platform Team</p>
+            """
+            }
+
+            return [success: true, message: "Invitation sent successfully.", topic: topic]
+
+        } catch (Exception e) {
+            log.error("Failed to send invitation email: ${e.message}", e)
+            return [success: false, message: "An error occurred while sending the invitation."]
+        }
     }
 }
