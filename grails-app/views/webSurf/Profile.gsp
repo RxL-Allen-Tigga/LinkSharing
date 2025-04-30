@@ -22,6 +22,19 @@ body {
     overflow-wrap: break-word; /* Modern */
     word-break: break-all;    /* Aggressive, breaks inside words */
 }
+.hover-pop {
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); !* solid base shadow *!*/
+    /*border: 1px solid #ccc; !* neutral light border *!*/
+    /*border-radius: 0.5rem;  !* optional rounding *!*/
+    transition: all 0.3s ease;
+    transform: none;
+}
+
+.hover-pop:hover {
+    /*box-shadow: 0 12px 24px rgba(0, 0, 0, 0.20); !* deeper shadow *!*/
+    transform: translateY(-6px); /* pop effect */
+    /*border-color: #0056b3; !* darker version of primary *!*/
+}
 .sortable {
     cursor: pointer;
 }
@@ -102,7 +115,7 @@ body {
                 <div class="col-1">
                     <g:link controller="webSurf" action="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto" fill="currentColor"
-                             class="bi bi-search" viewBox="0 0 16 16">
+                             class="bi bi-search hover-pop" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                         </svg>
                     </g:link>
@@ -110,7 +123,7 @@ body {
 
                 <div class="col-2 dropdown">
                     <!-- User dropdown -->
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <a class="btn btn-primary dropdown-toggle hover-pop" href="#" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" fill="currentColor"
                              class="bi bi-person-fill" viewBox="0 0 16 16">
@@ -275,7 +288,7 @@ body {
                                 <div class="row">
                                     <div class="col">
                                         <g:if test="${subscription}">
-                                            <a class="btn btn-primary dropdown-toggle"
+                                            <a class="btn btn-primary dropdown-toggle hover-pop"
                                                href="#" role="button"
                                                data-bs-toggle="dropdown"
                                                aria-expanded="false">
@@ -301,7 +314,7 @@ body {
 
                                     <div class="col">
                                         <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
-                                            <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                            <a class="btn btn-primary dropdown-toggle hover-pop" href="#" role="button"
                                                data-bs-toggle="dropdown" aria-expanded="false">
                                                 ${topic.visibility}
                                             </a>
@@ -328,7 +341,7 @@ body {
                                                     id="${topic.id}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
                                                      fill="currentColor"
-                                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                                     class="bi bi-trash3 hover-pop" viewBox="0 0 16 16">
                                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                                 </svg>
                                             </g:link>
@@ -341,7 +354,7 @@ body {
                                                onclick="openEditModal(${topic.id}, '${topic.name?.replaceAll("'", "\\\\'")}')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25"
                                                      height="auto" fill="currentColor"
-                                                     class="bi bi-pencil-square"
+                                                     class="bi bi-pencil-square hover-pop"
                                                      viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                     <path fill-rule="evenodd"
@@ -353,11 +366,11 @@ body {
 
                                     <div class="col-2">
                                         <g:if test="${subscription}">
-                                            <a href="#" class="svg-link" data-bs-toggle="modal"
+                                            <a href="#" data-bs-toggle="modal"
                                                data-bs-target="#Send_Invitation">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
                                                      fill="currentColor"
-                                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                                     class="bi bi-envelope-fill hover-pop" viewBox="0 0 16 16">
                                                     <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
                                                 </svg>
                                             </a>
@@ -442,7 +455,7 @@ body {
                                 <div class="row">
                                     <div class="col">
                                         <g:if test="${sessionSub}">
-                                            <a class="btn btn-primary dropdown-toggle"
+                                            <a class="btn btn-primary dropdown-toggle hover-pop"
                                                href="#" role="button"
                                                data-bs-toggle="dropdown"
                                                aria-expanded="false">
@@ -468,7 +481,7 @@ body {
 
                                     <div class="col">
                                         <g:if test="${topic?.createdBy?.id == session?.user?.id || session?.user?.admin == true}">
-                                            <a class="btn btn-primary dropdown-toggle" href="#" role="button"
+                                            <a class="btn btn-primary dropdown-toggle hover-pop" href="#" role="button"
                                                data-bs-toggle="dropdown" aria-expanded="false">
                                                 ${topic.visibility}
                                             </a>
@@ -495,7 +508,7 @@ body {
                                                     id="${topic.id}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
                                                      fill="currentColor"
-                                                     class="bi bi-trash3" viewBox="0 0 16 16">
+                                                     class="bi bi-trash3 hover-pop" viewBox="0 0 16 16">
                                                     <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                                 </svg>
                                             </g:link>
@@ -508,7 +521,7 @@ body {
                                                onclick="openEditModal(${topic.id}, '${topic.name?.replaceAll("'", "\\\\'")}')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25"
                                                      height="auto" fill="currentColor"
-                                                     class="bi bi-pencil-square"
+                                                     class="bi bi-pencil-square hover-pop"
                                                      viewBox="0 0 16 16">
                                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                                     <path fill-rule="evenodd"
@@ -520,11 +533,11 @@ body {
 
                                     <div class="col-2">
                                         <g:if test="${sessionSub}">
-                                            <a href="#" class="svg-link" data-bs-toggle="modal"
+                                            <a href="#" data-bs-toggle="modal"
                                                data-bs-target="#Send_Invitation">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="auto"
                                                      fill="currentColor"
-                                                     class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                                     class="bi bi-envelope-fill hover-pop" viewBox="0 0 16 16">
                                                     <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
                                                 </svg>
                                             </a>

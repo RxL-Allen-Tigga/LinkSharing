@@ -823,14 +823,14 @@ body {
                         <div class="col">
                             <!-- Topic Name -->
                             <div class="row">
-                                <div class="col-9 hover-pop">
+                                <div class="col-9">
                                     <g:link controller="webSurf" action="Topic" params="[id: map.topic?.id]">
                                         <h5>${map.topic.name.take(15)}
                                         </h5>
                                     </g:link>
                                 </div>
 
-                                <div class="col hover-pop">
+                                <div class="col">
                                     <g:if test="${!map.subscription}">
                                         <a class="link-opacity-60-hover"
                                            href="${createLink(controller: 'modifySubscription',
