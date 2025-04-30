@@ -135,7 +135,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -167,7 +167,7 @@ body {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 
-<div class="container">
+<div class="container break-word">
     <div>
         <g:if test="${flash.message}">
             <div class="alert alert-success" role="alert">
@@ -219,7 +219,7 @@ body {
                         <div class="row">
                             <div class="col">
                                 <g:link controller="webSurf" action="Profile" params="[id: userTopic.createdBy?.id]">
-                                    <h6>@${userTopic.createdBy.username}</h6>
+                                    <h6>@${userTopic.createdBy.username.take(15)}</h6>
                                 </g:link>
                             </div>
 
@@ -339,7 +339,7 @@ body {
 
                         <div class="col">
                             <div class="row">
-                                <h5>${entry.user.firstName} ${entry.user.lastName}
+                                <h5>${entry.user.firstName.take(15)} ${entry.user.lastName?.take(15)}
                                 </h5>
                             </div>
 
@@ -347,7 +347,7 @@ body {
                                 <div class="col">
                                     <g:link controller="webSurf" action="Profile"
                                             params="[id: entry.user?.id]">
-                                        <h6>@${entry.user.username}
+                                        <h6>@${entry.user.username.take(15)}
                                         </h6>
                                     </g:link>
                                 </div>
@@ -387,7 +387,7 @@ body {
                         <div class="row">
                             <g:link controller="webSurf" action="Profile"
                                     params="[id: resource.createdBy?.id]">
-                                <h6>@${resource.createdBy.username}</h6>
+                                <h6>@${resource.createdBy.username.take(15)}</h6>
                             </g:link>
                         </div>
 

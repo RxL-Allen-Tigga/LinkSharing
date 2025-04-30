@@ -53,6 +53,11 @@
     .search-container {
         margin-bottom: 10px;
     }
+    .break-word {
+        word-wrap: break-word;    /* Legacy */
+        overflow-wrap: break-word; /* Modern */
+        word-break: break-all;    /* Aggressive, breaks inside words */
+    }
     </style>
 </head>
 
@@ -97,7 +102,7 @@
                 <div class="col-2 dropdown text-end">
                     <a class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
-                        <i class="fas fa-user"></i> ${session.user.username}
+                        <i class="fas fa-user"></i> ${session.user.username.take(15)}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -122,7 +127,7 @@
 </div>
 
 <!-- ✅ MAIN CONTENT: TABLES -->
-<div class="main-content">
+<div class="main-content break-word">
     <div class="search-container">
         <label for="globalSearch" class="form-label"><strong>Search All Tables:</strong></label>
         <input type="text" id="globalSearch" class="form-control" placeholder="Type to search...">

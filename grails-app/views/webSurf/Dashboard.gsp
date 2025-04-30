@@ -126,7 +126,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -199,7 +199,7 @@ body {
                     <ul class="row list-group">
                         <g:each in="${userSubscribedTopics}" var="topic">
                             <li class="list-group-item">
-                                ${topic.name} (${topic.visibility}) : @${topic.createdBy.username}
+                                ${topic.name.take(15)} (${topic.visibility}) : @${topic.createdBy.username.take(15)}
                             </li>
                         </g:each>
                     </ul>
@@ -264,12 +264,12 @@ body {
 
                     <div class="col">
                         <div class="row">
-                            <h5>${session.user?.firstName} ${session.user?.lastName}</h5>
+                            <h5>${session.user?.firstName.take(15)} ${session.user?.lastName?.take(15)}</h5>
                         </div>
 
                         <div class="row">
                             <g:link controller="webSurf" action="Profile" params="[id: session.user?.id]">
-                                <h6>@${session.user?.username}</h6>
+                                <h6>@${session.user?.username.take(15)}</h6>
                             </g:link>
                         </div>
 
@@ -528,7 +528,7 @@ body {
                                 <div class="col-9">
                                     <g:link controller="webSurf" action="Topic"
                                             params="[id: data.subscription?.topic?.id]">
-                                        <h5>${data.subscription?.topic?.name}</h5>
+                                        <h5>${data.subscription?.topic?.name.take(15)}</h5>
                                     </g:link>
                                 </div>
 
@@ -554,7 +554,7 @@ body {
                                 <div class="col">
                                     <g:link controller="webSurf" action="Profile"
                                             params="[id: data.subscription.topic?.createdBy?.id]">
-                                        <h6>@${data.subscription?.topic?.createdBy?.username}</h6>
+                                        <h6>@${data.subscription?.topic?.createdBy?.username.take(15)}</h6>
                                     </g:link>
                                 </div>
 
@@ -813,7 +813,7 @@ body {
                             <div class="row">
                                 <div class="col-9">
                                     <g:link controller="webSurf" action="Topic" params="[id: map.topic?.id]">
-                                        <h5>${map.topic.name}
+                                        <h5>${map.topic.name.take(15)}
                                         </h5>
                                     </g:link>
                                 </div>
@@ -840,7 +840,7 @@ body {
                             <div class="row">
                                 <div class="col">
                                     <g:link controller="webSurf" action="Profile" params="[id: map.topic.createdBy.id]">
-                                        <h6>@${map.topic.createdBy.username}</h6>
+                                        <h6>@${map.topic.createdBy.username.take(15)}</h6>
                                     </g:link>
                                 </div>
 
@@ -1159,7 +1159,7 @@ body {
                                     <g:link controller="webSurf" action="Topic"
                                             params="[id: totalunread.resource?.topic?.id]">
                                         <h5>
-                                            ${totalunread.resource.topic.name}
+                                            ${totalunread.resource.topic.name.take(15)}
                                         </h5>
                                     </g:link>
                                 </div>
@@ -1167,7 +1167,7 @@ body {
                                 <div class="col">
                                     <g:link controller="webSurf" action="Profile"
                                             params="[id: totalunread.resource?.createdBy?.id]">
-                                        <h6>@${totalunread.resource.createdBy.username}</h6>
+                                        <h6>@${totalunread.resource.createdBy.username.take(15)}</h6>
                                     </g:link>
                                 </div>
                             </div>

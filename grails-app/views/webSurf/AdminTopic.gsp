@@ -65,6 +65,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 
 .sortable {
     cursor: pointer;
@@ -88,7 +93,7 @@ body {
 
 <body>
 %{--<Header:navbar username="${session.user?.username}"/>--}%
-<div class="container-fluid sticky-top bg-light shadow">
+<div class="container-fluid sticky-top bg-light shadow break-word">
     <div class="row align-items-center text-bg-light p-2 border-dark mb-2">
         <div class="col-4">
             <div class="row">
@@ -167,7 +172,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">

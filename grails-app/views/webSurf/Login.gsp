@@ -134,11 +134,12 @@ body {
                             <div class="row">
                                 <div class="row">
                                     <div class="col">
-                                        <h6>${resource.topic.name}</h6>
+%{--                                        <h6>${resource.topic.name}</h6>--}%
+                                        <h6>${resource.topic?.name?.take(15)}</h6>
                                     </div>
 
                                     <div class="col">
-                                        <h6>@${resource.createdBy.username}</h6>
+                                        <h6>@${resource.createdBy.username.take(15)}</h6>
                                     </div>
                                 </div>
 
@@ -189,11 +190,11 @@ body {
                             <div class="row">
                                 <div class="row">
                                     <div class="col">
-                                        <h6>${item.resource.topic.name}</h6>
+                                        <h6>${item.resource.topic.name.take(15)}</h6>
                                     </div>
 
                                     <div class="col">
-                                        <h6>@${item.resource.createdBy.username}</h6>
+                                        <h6>@${item.resource.createdBy.username.take(15)}</h6>
                                     </div>
                                     <div class="col">
                                         Avg Rating: ${item.average ? String.format('%.2f', item.average) : 'No Ratings Yet'}

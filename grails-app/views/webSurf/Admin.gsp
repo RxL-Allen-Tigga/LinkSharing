@@ -65,6 +65,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 
 .sortable {
     cursor: pointer;
@@ -167,7 +172,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -212,7 +217,7 @@ body {
     </g:if>
 </div>
 
-<div class="main-content">
+<div class="main-content break-word">
     <div class="search-container">
         <h2>
         <label for="globalSearch" class="form-label"><strong>Search:</strong></label>

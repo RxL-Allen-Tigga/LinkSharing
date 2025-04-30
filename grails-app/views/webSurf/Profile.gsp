@@ -116,7 +116,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -150,7 +150,7 @@ body {
 
 <g:render template="/shared/navbarModals" model="[subscribedTopics: subscribedTopics]"/>
 
-<div class="container">
+<div class="container break-word">
     <div>
         <g:if test="${flash.message}">
             <div class="alert alert-success" role="alert">
@@ -236,7 +236,7 @@ body {
                                     <div class="col">
                                         <g:link controller="webSurf" action="Topic"
                                                 params="[id: topic?.id]">
-                                            <h5>${topic.name} (${topic.visibility})
+                                            <h5>${topic.name.take(15)} (${topic.visibility})
                                             </h5>
                                         </g:link>
                                     </div>
@@ -396,7 +396,7 @@ body {
                                     <div class="col">
                                         <g:link controller="webSurf" action="Topic"
                                                 params="[id: topic?.id]">
-                                            <h5>${topic.name} (${topic.visibility})
+                                            <h5>${topic.name.take(15)} (${topic.visibility})
                                             </h5>
                                         </g:link>
                                     </div>
@@ -423,7 +423,7 @@ body {
                                     <div class="col">
                                         <g:link controller="webSurf" action="Profile"
                                                 params="[id: topic.createdBy?.id]">
-                                            <h6>@${topic.createdBy.username}
+                                            <h6>@${topic.createdBy.username.take(15)}
                                             </h6>
                                         </g:link>
                                     </div>
@@ -562,7 +562,7 @@ body {
                                             <g:link controller="webSurf" action="Topic"
                                                     params="[id: resource.topic?.id]">
                                                 <h5>
-                                                    ${resource.topic.name} (${resource.topic.visibility})
+                                                    ${resource.topic.name.take(15)} (${resource.topic.visibility})
                                                 </h5>
                                             </g:link>
                                         </div>
@@ -570,7 +570,7 @@ body {
                                         <div class="col">
                                             <g:link controller="webSurf" action="Profile"
                                                     params="[id: resource?.createdBy?.id]">
-                                                <h6>@${resource.createdBy.username}</h6>
+                                                <h6>@${resource.createdBy.username.take(15)}</h6>
                                             </g:link>
                                         </div>
                                     </div>

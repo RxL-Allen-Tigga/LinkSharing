@@ -16,6 +16,11 @@ body {
     background-position: center;
     background-attachment: fixed;
 }
+.break-word {
+    word-wrap: break-word;    /* Legacy */
+    overflow-wrap: break-word; /* Modern */
+    word-break: break-all;    /* Aggressive, breaks inside words */
+}
 
 .sortable {
     cursor: pointer;
@@ -75,7 +80,7 @@ body {
                              class="bi bi-person-fill" viewBox="0 0 16 16">
                             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
-                        ${session.user.username ?: 'user_name'}
+                        ${session.user.username.take(15) ?: 'user_name'}
                     </a>
                     <ul class="dropdown-menu">
                         <g:if test="${session.user.admin}">
@@ -192,7 +197,7 @@ body {
     </div>
 </div>
 
-<div class="container">
+<div class="container break-word">
     <div>
         <g:if test="${flash.message}">
             <div class="alert alert-success" role="alert">
@@ -284,7 +289,7 @@ body {
                                     <div class="col">
                                         <g:link controller="webSurf" action="Topic"
                                                 params="[id: subscription.topic?.id]">
-                                            <h5>${subscription.topic.name}</h5>
+                                            <h5>${subscription.topic.name.take(15)}</h5>
                                         </g:link>
                                     </div>
                                 </div>
@@ -293,7 +298,7 @@ body {
                                     <div class="col">
                                         <g:link controller="webSurf" action="Profile"
                                                 params="[id: subscription.topic?.createdBy?.id]">
-                                            <h6>@${subscription.topic.createdBy.username}</h6>
+                                            <h6>@${subscription.topic.createdBy.username.take(15)}</h6>
                                         </g:link>
                                     </div>
 
