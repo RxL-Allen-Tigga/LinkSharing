@@ -22,6 +22,18 @@ body {
     overflow-wrap: break-word; /* Modern */
     word-break: break-all;    /* Aggressive, breaks inside words */
 }
+.hover-pop {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* solid base shadow */
+    border: 1px solid #ccc; /* neutral light border */
+    border-radius: 0.5rem;  /* optional rounding */
+    transition: all 0.3s ease;
+}
+
+.hover-pop:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.20); /* deeper shadow */
+    transform: translateY(-6px); /* pop effect */
+    border-color: #0056b3; /* darker version of primary */
+}
 .sortable {
     cursor: pointer;
 }
@@ -63,7 +75,7 @@ body {
             <!-- <g:link class="link-opacity-60-hover" controller="webSurf" action="dashboard">
                 <h2>Link Sharing</h2>
             </g:link> -->
-            <a class="link-opacity-60-hover" href="http://localhost:8080/webSurf/dashboard/"><h2>Link Sharing</h2></a>
+            <a class="link-opacity-60-hover " href="http://localhost:8080/webSurf/dashboard/"><h2>Link Sharing</h2></a>
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
                   rel="stylesheet">
         </div>
@@ -233,7 +245,7 @@ body {
 
         <div class="col">
             <div class="border rounded border-dark p-2 mb-2 text-bg-light">
-                <div class="row">
+                <div class="row ">
                     <h3>Login</h3>
                 </div>
                 <br>
@@ -259,11 +271,11 @@ body {
 
                     <div class="row ">
                         <div class="col">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                            <button type="submit" class="btn btn-primary  hover-pop">Login</button>
                         </div>
 
                         <div class="col-3">
-                            <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#ForgotPasswordModal">
+                            <button type="button" class="btn btn-link p-0 " data-bs-toggle="modal" data-bs-target="#ForgotPasswordModal">
                                 Forgot Password?
                             </button>
                         </div>
@@ -337,7 +349,7 @@ body {
 
                     <br>
 
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary  hover-pop">Register</button>
                 </form>
             </div>
         </div>
